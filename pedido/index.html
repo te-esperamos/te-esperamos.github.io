@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-1koJUNESLVhQpM3oV6+8oGbitFnP2FWSnqLSqoUgWEg='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Tu invitación · Te esperamos</title>
+<meta property="og:title" content="Pedí tu invitación digital">
+<meta property="og:description" content="Completá los datos de tu evento y te la armamos.">
+<meta name="theme-color" content="#faf8f3">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Jost:wght@400;500&display=swap">
+<style>
+/* Formulario de pedido: lo completa quien compró en Mercado Libre, casi siempre desde el celular.
+ * Paleta del estilo "clásica" (neutra): el formulario no tiene que parecerse a ninguna invitación. */
+:root { --bg: #faf8f3; --card: #fff; --ink: #222; --muted: #6d665c; --accent: #a8864f; --line: #e6dfd3; --error: #b03a2e; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.55 "Jost", system-ui, sans-serif; }
+/* Números de imprenta también en Cormorant (los "de texto" bajaban el 1 de "1 Tu compra"). */
+*, *::before, *::after { font-variant-numeric: lining-nums !important; }
+main { max-width: 620px; margin: 0 auto; padding: 28px 18px 60px; }
+h1 { font: 600 34px/1.15 "Cormorant Garamond", Georgia, serif; margin: 0 0 6px; }
+.marca { font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); margin: 0 0 8px; }
+.intro { color: var(--muted); margin: 0 0 22px; }
+fieldset { border: 1px solid var(--line); background: var(--card); border-radius: 16px; padding: 18px 16px 8px; margin: 0 0 16px; }
+legend { font: 600 21px/1.2 "Cormorant Garamond", Georgia, serif; padding: 0 6px; }
+legend b { color: var(--accent); font-weight: 600; margin-right: 6px; }
+.campo { margin: 0 0 14px; }
+label, .etiqueta { display: block; font-size: 13px; font-weight: 500; margin: 0 0 5px; }
+.ayuda { display: block; font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+input[type=text], input[type=email], input[type=tel], input[type=number], input[type=date], input[type=time], textarea {
+  width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; font: inherit; background: #fff; color: inherit; }
+input:focus, textarea:focus { outline: 2px solid color-mix(in srgb, var(--accent) 40%, transparent); border-color: var(--accent); }
+textarea { min-height: 76px; resize: vertical; }
+.fila { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.opciones input { position: absolute; opacity: 0; }
+.opciones label { margin: 0; padding: 14px 10px; text-align: center; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; font-size: 15px; }
+.opciones input:checked + label { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, #fff); font-weight: 500; }
+.opciones input:focus-visible + label { outline: 2px solid var(--accent); }
+/* Dos por fila en el celular: con 150 px de mínimo entraba una sola y había que bajar mucho para verlas. */
+.estilos { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+.estilos input { position: absolute; opacity: 0; }
+.estilos label { margin: 0; border: 2px solid transparent; border-radius: 14px; overflow: hidden; cursor: pointer; background: var(--bg); font-weight: 400; }
+.estilos img { width: 100%; display: block; aspect-ratio: 2 / 3; object-fit: cover; }
+.estilos span { display: block; text-align: center; font-size: 13.5px; padding: 6px 4px 8px; }
+.estilos input:checked + label { border-color: var(--accent); }
+.estilos input:focus-visible + label { outline: 2px solid var(--accent); }
+.bloque { border: 1px dashed var(--line); border-radius: 12px; padding: 12px 12px 2px; margin: 0 0 10px; position: relative; }
+.quitar { position: absolute; top: 6px; right: 8px; border: 0; background: none; color: var(--muted); font-size: 13px; cursor: pointer; text-decoration: underline; }
+.agregar { border: 1px solid var(--accent); background: none; color: var(--accent); border-radius: 999px; padding: 9px 16px; font: 500 14px "Jost", sans-serif; cursor: pointer; margin: 0 0 14px; }
+.cheq { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 10px; font-size: 15px; }
+.cheq input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); }
+.nota { background: color-mix(in srgb, var(--accent) 9%, #fff); border-radius: 12px; padding: 12px 14px; font-size: 14.5px; margin: 0 0 14px; }
+.enviar { width: 100%; border: 0; border-radius: 999px; padding: 16px; background: var(--accent); color: #fff; font: 500 16px "Jost", sans-serif; letter-spacing: .06em; cursor: pointer; }
+.enviar[disabled] { opacity: .6; cursor: default; }
+.errores { border: 1px solid var(--error); color: var(--error); border-radius: 12px; padding: 12px 14px; margin: 0 0 14px; font-size: 14.5px; }
+.errores ul { margin: 6px 0 0; padding-left: 18px; }
+.mal { border-color: var(--error) !important; }
+.listo { text-align: center; padding: 30px 18px; }
+.listo h2 { font: 600 32px/1.2 "Cormorant Garamond", Georgia, serif; margin: 0 0 8px; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <p class="marca">Te esperamos</p>
+  <h1>Los datos de tu invitación</h1>
+  <p class="intro">Completalo con calma: se guarda solo en este celular mientras lo llenás. Con esto armamos tu invitación y tu planilla de confirmados.</p>
+
+  <form id="pedido" novalidate>
+    <fieldset>
+      <legend><b>1</b>Tu compra</legend>
+      <div class="campo"><label for="compra">Número de compra de Mercado Libre</label>
+        <input type="text" id="compra" inputmode="numeric" autocomplete="off" required>
+        <span class="ayuda">Está en Mis compras → el detalle de esta compra (ej.: 2000012345678).</span></div>
+      <div class="campo"><label for="mail">Tu Gmail (para compartirte la planilla de confirmados)</label>
+        <input type="email" id="mail" autocomplete="email" required></div>
+    </fieldset>
+
+    <fieldset>
+      <legend><b>2</b>El evento</legend>
+      <div class="campo"><span class="etiqueta">¿Qué celebran?</span>
+        <div class="opciones">
+          <input type="radio" name="tipo" id="tipo-quince" value="quince"><label for="tipo-quince">15 años</label>
+          <input type="radio" name="tipo" id="tipo-boda" value="boda"><label for="tipo-boda">Casamiento</label>
+        </div></div>
+      <div class="campo" id="campo-estilo" hidden><span class="etiqueta">Elegí el estilo</span>
+        <div class="estilos" id="estilos"></div></div>
+      <div class="campo"><label for="nombres" id="et-nombres">Nombre(s) para la tapa</label>
+        <input type="text" id="nombres" maxlength="60" required>
+        <span class="ayuda" id="ay-nombres">Solo nombres, sin apellido: la tapa la ve cualquiera que tenga el link.</span></div>
+      <div class="campo"><label for="frase">Una frase (opcional)</label>
+        <textarea id="frase" maxlength="400" placeholder="Si la dejás vacía, te proponemos una."></textarea></div>
+      <div class="fila">
+        <div class="campo"><label for="fecha">Fecha</label><input type="date" id="fecha" required></div>
+        <div class="campo"><label for="hora">Empieza</label><input type="time" id="hora" required></div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="fin">Termina (aprox.)</label><input type="time" id="fin"></div>
+        <div class="campo"><label for="ciudad">Ciudad</label><input type="text" id="ciudad" maxlength="80" placeholder="Yerba Buena, Tucumán"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><b>3</b>Dónde</legend>
+      <div id="lugares"></div>
+      <button type="button" class="agregar" data-agregar="lugar">+ Agregar otro lugar</button>
+    </fieldset>
+
+    <fieldset>
+      <legend><b>4</b>Más detalles <small style="font-size:14px;color:var(--muted)">(opcional)</small></legend>
+      <span class="etiqueta">Cronograma de la noche</span>
+      <div id="cronograma"></div>
+      <button type="button" class="agregar" data-agregar="momento">+ Agregar un momento</button>
+      <div class="fila">
+        <div class="campo"><label for="dress">Dress code</label><input type="text" id="dress" maxlength="40" placeholder="Elegante"></div>
+        <div class="campo"><label for="hashtag">Hashtag para fotos</label><input type="text" id="hashtag" maxlength="40" placeholder="#SofiMis15"></div>
+      </div>
+      <div class="campo"><label for="dress-detalle">Detalle del dress code</label>
+        <input type="text" id="dress-detalle" maxlength="300" placeholder="Ej.: el blanco es solo para la novia"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend><b>5</b>Regalos <small style="font-size:14px;color:var(--muted)">(opcional)</small></legend>
+      <label class="cheq"><input type="checkbox" id="con-regalos"> Quiero mostrar datos para regalos</label>
+      <div id="regalos" hidden>
+        <div class="campo"><label for="reg-texto">Texto</label><textarea id="reg-texto" maxlength="400" placeholder="Lo más lindo que me podés regalar es que vengas..."></textarea></div>
+        <div class="fila">
+          <div class="campo"><label for="alias">Alias</label><input type="text" id="alias" maxlength="40"></div>
+          <div class="campo"><label for="cbu">CBU / CVU</label><input type="text" id="cbu" inputmode="numeric" maxlength="30"></div>
+        </div>
+        <div class="fila">
+          <div class="campo"><label for="titular">Titular</label><input type="text" id="titular" maxlength="80"></div>
+          <div class="campo"><label for="banco">Banco</label><input type="text" id="banco" maxlength="60"></div>
+        </div>
+        <div class="campo"><label for="sobres">¿Va a haber cofre o urna para sobres?</label><input type="text" id="sobres" maxlength="160" placeholder="Ej.: En la fiesta va a haber un cofre para sobres."></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><b>6</b>Confirmación de asistencia</legend>
+      <div class="fila">
+        <div class="campo"><label for="hasta">Confirmar hasta</label><input type="date" id="hasta"></div>
+        <div class="campo"><label for="max">Máx. por invitación</label><input type="number" id="max" min="1" max="30" placeholder="10"></div>
+      </div>
+      <label class="cheq"><input type="checkbox" id="menu" checked> Preguntar si alguien necesita menú especial (sin TACC, vegetariano, vegano)</label>
+      <label class="cheq"><input type="checkbox" id="cancion" checked> Pedir una canción que no puede faltar</label>
+      <label class="cheq"><input type="checkbox" id="mensaje" checked> Dejar que escriban un mensaje</label>
+      <div class="campo"><label for="whatsapp">Un celular para consultas (opcional)</label>
+        <input type="tel" id="whatsapp" autocomplete="tel" placeholder="381 555 0000">
+        <span class="ayuda">Aparece solo si a un invitado no le funciona el formulario, para que avise por WhatsApp.</span></div>
+    </fieldset>
+
+    <fieldset>
+      <legend><b>7</b>Fotos y comentarios</legend>
+      <p class="nota">Las fotos mandalas por la <b>mensajería de Mercado Libre</b>, en esta misma compra: una para la portada (vertical queda mejor) y hasta 12 para la galería. Si no mandás fotos, la invitación va sin galería y queda igual de linda.</p>
+      <div class="campo"><label for="comentarios">¿Algo más que tengamos que saber?</label>
+        <textarea id="comentarios" maxlength="1000"></textarea></div>
+    </fieldset>
+
+    <div class="errores" id="errores" hidden></div>
+    <button class="enviar" type="submit">Enviar mis datos</button>
+  </form>
+
+  <div class="listo" id="listo" hidden>
+    <h2>¡Listo, recibimos tus datos!</h2>
+    <p>Ahora mandanos las fotos por la mensajería de Mercado Libre. Tu invitación y tu planilla te llegan por ahí mismo.</p>
+    <p class="ayuda">Si te olvidaste de algo, volvé a completar el formulario con el mismo número de compra: vale el último.</p>
+  </div>
+</main>
+
+<template id="t-lugar">
+  <div class="bloque">
+    <button type="button" class="quitar">Quitar</button>
+    <div class="fila">
+      <div class="campo"><label>Qué es</label><input type="text" data-k="titulo" maxlength="30" list="tipos-lugar" placeholder="Fiesta"></div>
+      <div class="campo"><label>Hora</label><input type="time" data-k="hora"></div>
+    </div>
+    <div class="campo"><label>Nombre del lugar</label><input type="text" data-k="nombre" maxlength="80" placeholder="Salón Las Magnolias"></div>
+    <div class="campo"><label>Dirección</label><input type="text" data-k="direccion" maxlength="160" placeholder="Calle 123, Ciudad, Provincia"></div>
+  </div>
+</template>
+<template id="t-momento">
+  <div class="bloque">
+    <button type="button" class="quitar">Quitar</button>
+    <div class="fila">
+      <div class="campo"><label>Hora</label><input type="time" data-k="hora"></div>
+      <div class="campo"><label>Qué pasa</label><input type="text" data-k="que" maxlength="60" placeholder="Entrada y vals"></div>
+    </div>
+  </div>
+</template>
+<datalist id="tipos-lugar"><option value="Fiesta"><option value="Ceremonia"><option value="Civil"><option value="Misa"><option value="Recepción"></datalist>
+
+<script type="application/json" id="config">{"web_app":"https://script.google.com/macros/s/AKfycbyHjwKANgOkhw6V6wEG3c21v8Y13zhR5U3ghFMXFbNPuVPwa6YJJlhJh4a6vhdD2p8PbA/exec","hoja":"1eHrSsBsDbPeToa1Tcw14MKwMQpHI5yYJM6xxuh0J85Q","estilos":[{"id":"gala","tipo":"quince","nombre":"Noche"},{"id":"rosa","tipo":"quince","nombre":"Rosa"},{"id":"lila","tipo":"quince","nombre":"Lila"},{"id":"jardin","tipo":"boda","nombre":"Jardín"},{"id":"clasica","tipo":"boda","nombre":"Clásica"}]}</script>
+<script>// Formulario de pedido: arma los datos con las MISMAS claves que evento.yaml (pedidos.py los copia
+// casi tal cual) y los manda al script de Google. Valida antes de mandar lo que generar.mjs rechazaría
+// (fechas, horas, CBU de 22 números), así el pedido no vuelve con errores días después.
+"use strict";
+
+(() => {
+  const cfg = JSON.parse(document.getElementById("config").textContent);
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const form = $("#pedido");
+  const BORRADOR = "pedido-borrador";
+
+  // ------------------------------------------------------------ estilos según el tipo
+  function pintarEstilos(tipo, elegido) {
+    const caja = $("#estilos");
+    caja.innerHTML = cfg.estilos.filter((e) => e.tipo === tipo).map((e) =>
+      `<input type="radio" name="estilo" id="est-${e.id}" value="${e.id}"${e.id === elegido ? " checked" : ""}>` +
+      `<label for="est-${e.id}"><img src="estilos/${e.id}.jpg" alt="" loading="lazy"><span>${e.nombre}</span></label>`).join("");
+    $("#campo-estilo").hidden = false;
+    const boda = tipo === "boda";
+    $("#et-nombres").textContent = boda ? "Nombres de los novios" : "Nombre de la quinceañera";
+    $("#nombres").placeholder = boda ? "Lucía & Martín" : "Sofía";
+  }
+
+  // ------------------------------------------------------------ bloques repetibles
+  const LIMITE = { lugar: 4, momento: 12 };
+  function agregar(tipo, valores = {}) {
+    const caja = $(tipo === "lugar" ? "#lugares" : "#cronograma");
+    if (caja.children.length >= LIMITE[tipo]) return;
+    const b = $(`#t-${tipo}`).content.firstElementChild.cloneNode(true);
+    for (const i of $$("[data-k]", b)) i.value = valores[i.dataset.k] || "";
+    b.querySelector(".quitar").onclick = () => { b.remove(); guardar(); };
+    caja.append(b);
+  }
+  const bloques = (sel) => $$(`${sel} .bloque`).map((b) => Object.fromEntries($$("[data-k]", b).map((i) => [i.dataset.k, i.value.trim()])));
+
+  // ------------------------------------------------------------ armar los datos
+  const v = (id) => ($(`#${id}`).value || "").trim();
+  function datos() {
+    const tipo = form.tipo.value;
+    const fecha = v("fecha"), hora = v("hora");
+    let fin = "";
+    if (fecha && v("fin")) {
+      // "Termina 05:00" de una fiesta que empieza 21:30 es al día siguiente.
+      const d = new Date(`${fecha}T12:00:00Z`);
+      if (v("fin") <= hora) d.setUTCDate(d.getUTCDate() + 1);
+      fin = `${d.toISOString().slice(0, 10)} ${v("fin")}`;
+    }
+    const d = {
+      tipo, estilo: form.estilo?.value || "", nombres: v("nombres"), frase: v("frase"),
+      fecha: fecha && hora ? `${fecha} ${hora}` : "", fin, ciudad: v("ciudad"),
+      lugares: bloques("#lugares").filter((l) => l.nombre || l.direccion),
+      cronograma: bloques("#cronograma").filter((c) => c.hora && c.que),
+      dress_code: v("dress") ? { titulo: v("dress"), detalle: v("dress-detalle") } : null,
+      regalos: $("#con-regalos").checked ? {
+        texto: v("reg-texto"), alias: v("alias"), cbu: v("cbu").replace(/\D/g, ""), titular: v("titular"), banco: v("banco"), sobres: v("sobres"),
+      } : null,
+      confirmacion: {
+        hasta: v("hasta"), menu_especial: $("#menu").checked, cancion: $("#cancion").checked, mensaje: $("#mensaje").checked,
+        max_personas: v("max") ? Number(v("max")) : null, whatsapp: v("whatsapp"),
+      },
+      hashtag: v("hashtag"), comentarios: v("comentarios"),
+    };
+    return d;
+  }
+
+  function errores(d) {
+    const e = [];
+    const marcar = (id, msg) => { $(`#${id}`)?.classList.add("mal"); e.push(msg); };
+    $$(".mal").forEach((x) => x.classList.remove("mal"));
+    if (v("compra").replace(/\D/g, "").length < 6) marcar("compra", "El número de compra (está en Mis compras).");
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v("mail"))) marcar("mail", "Un mail válido para compartirte la planilla.");
+    if (!d.tipo) e.push("Si son 15 años o casamiento.");
+    if (d.tipo && !d.estilo) e.push("El estilo de la invitación.");
+    if (!d.nombres) marcar("nombres", "Los nombres para la tapa.");
+    if (!d.fecha) { if (!v("fecha")) marcar("fecha", "La fecha."); if (!v("hora")) marcar("hora", "La hora en que empieza."); }
+    else if (new Date(`${v("fecha")}T00:00:00-03:00`) < new Date(Date.now() - 864e5)) marcar("fecha", "La fecha ya pasó: revisala.");
+    if (!d.lugares.length) e.push("Al menos un lugar, con nombre y dirección.");
+    d.lugares.forEach((l, i) => { if (!l.nombre || !l.direccion || !l.hora) e.push(`Al lugar ${i + 1} le falta ${!l.nombre ? "el nombre" : !l.direccion ? "la dirección" : "la hora"}.`); });
+    if (d.confirmacion.hasta && v("fecha") && d.confirmacion.hasta > v("fecha")) marcar("hasta", "La fecha para confirmar tiene que ser antes del evento.");
+    if (d.regalos?.cbu && d.regalos.cbu.length !== 22) marcar("cbu", "El CBU/CVU tiene 22 números.");
+    if (d.regalos && !d.regalos.alias && !d.regalos.cbu && !d.regalos.texto) marcar("alias", "En regalos: un alias, un CBU o un texto.");
+    return e;
+  }
+
+  // ------------------------------------------------------------ borrador (en este celular)
+  function guardar() {
+    try {
+      const campos = Object.fromEntries($$("input[id],textarea[id]", form).map((i) => [i.id, i.type === "checkbox" ? i.checked : i.value]));
+      localStorage.setItem(BORRADOR, JSON.stringify({ campos, tipo: form.tipo.value, estilo: form.estilo?.value, lugares: bloques("#lugares"), cronograma: bloques("#cronograma") }));
+    } catch { /* sin memoria del navegador: no pasa nada */ }
+  }
+  function recuperar() {
+    let b = null;
+    try { b = JSON.parse(localStorage.getItem(BORRADOR) || "null"); } catch { /* idem */ }
+    if (b?.tipo) { $(`#tipo-${b.tipo}`).checked = true; pintarEstilos(b.tipo, b.estilo); }
+    for (const [id, val] of Object.entries(b?.campos || {})) {
+      const i = document.getElementById(id);
+      if (i) i.type === "checkbox" ? (i.checked = val) : (i.value = val);
+    }
+    $("#regalos").hidden = !$("#con-regalos").checked;
+    (b?.lugares?.length ? b.lugares : [{ titulo: "Fiesta" }]).forEach((l) => agregar("lugar", l));
+    (b?.cronograma || []).forEach((c) => agregar("momento", c));
+  }
+
+  // ------------------------------------------------------------ eventos
+  form.addEventListener("change", (e) => {
+    if (e.target.name === "tipo") {
+      pintarEstilos(e.target.value);
+      // Casamiento: casi siempre hay ceremonia y fiesta. Se propone si el primer lugar está vacío.
+      const primero = $("#lugares .bloque");
+      if (e.target.value === "boda" && $("#lugares").children.length === 1 && !primero.querySelector("[data-k=nombre]").value) {
+        primero.querySelector("[data-k=titulo]").value = "Ceremonia";
+        agregar("lugar", { titulo: "Fiesta" });
+      }
+    }
+    if (e.target.id === "con-regalos") $("#regalos").hidden = !e.target.checked;
+    guardar();
+  });
+  form.addEventListener("input", guardar);
+  $$("[data-agregar]").forEach((b) => (b.onclick = () => { agregar(b.dataset.agregar); guardar(); }));
+
+  form.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const d = datos();
+    const caja = $("#errores");
+    const e = errores(d);
+    if (e.length) {
+      caja.innerHTML = `Falta o hay que revisar:<ul>${e.map((x) => `<li>${x}</li>`).join("")}</ul>`;
+      caja.hidden = false;
+      caja.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    caja.hidden = true;
+    const boton = form.querySelector(".enviar");
+    boton.disabled = true;
+    boton.textContent = "Enviando…";
+    try {
+      const r = await fetch(cfg.web_app, {
+        method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ accion: "pedido", hoja: cfg.hoja, compra: v("compra").replace(/\D/g, ""), tipo: d.tipo, estilo: d.estilo, nombres: d.nombres, mail: v("mail"), datos: d }),
+      });
+      const j = await r.json();
+      if (!j.ok) throw new Error(j.error);
+      form.hidden = true;
+      $("#listo").hidden = false;
+      scrollTo(0, 0);
+    } catch (err) {
+      boton.disabled = false;
+      boton.textContent = "Reintentar";
+      caja.innerHTML = "No se pudo enviar. Revisá la conexión y probá de nuevo; lo que escribiste quedó guardado en este celular.";
+      caja.hidden = false;
+    }
+  });
+
+  if (!cfg.web_app || !cfg.hoja) {
+    form.querySelector(".enviar").disabled = true;
+    form.querySelector(".enviar").textContent = "Formulario en preparación";
+  }
+  recuperar();
+})();
+</script>
+</body>
+</html>
