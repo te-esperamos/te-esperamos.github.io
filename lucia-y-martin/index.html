@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="es-AR" data-estilo="jardin">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-ooxRTTDRpxnZygXMXQssf/s0SXtUsm0tYvWxGKnW4iE='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; media-src blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Lucía &amp; Martín · Nos casamos</title>
+<meta name="description" content="Tenés una invitación. Tocá para abrirla.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lucía &amp; Martín · Nos casamos">
+<meta property="og:description" content="Tenés una invitación. Tocá para abrirla.">
+<meta property="og:image" content="https://te-esperamos.github.io/lucia-y-martin/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="theme-color" content="#f6f3ea">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@400;500&family=Parisienne&display=swap">
+<style>/* Invitación web: un solo CSS para los dos tipos (15 y boda) y los 5 estilos.
+ *
+ * Por qué un CSS con variables y no una plantilla por estilo: el 90 % del diseño (tipografía, espacios,
+ * formulario, tarjetas) es igual; lo que cambia es la paleta, la letra manuscrita y los adornos. Con
+ * plantillas separadas, cada arreglo había que hacerlo 5 veces y se iban desfasando.
+ *
+ * Pensado primero para celular (así se abre el 95 % de las invitaciones, desde WhatsApp): columna de
+ * 520 px como máximo, centrada en la compu. */
+
+:root {
+  --serif: "Cormorant Garamond", Georgia, serif;
+  --sans: "Jost", "Segoe UI", system-ui, sans-serif;
+  --script: "Great Vibes", "Segoe Script", cursive;
+  --radio: 18px;
+}
+
+/* ---------------------------------------------------------------- paletas por estilo */
+[data-estilo="gala"] {
+  --bg: #0d1228; --bg2: #18224a; --ink: #f4ede1; --muted: #b9b3c9; --accent: #d9b56a;
+  --accent-ink: #1a1405; --line: rgba(217, 181, 106, .45); --card: rgba(255, 255, 255, .045);
+  --campo: rgba(255, 255, 255, .06); --sombra: rgba(0, 0, 0, .35); --cielo: #f3dfae;
+}
+[data-estilo="rosa"] {
+  --bg: #f8eeeb; --bg2: #f2dcd7; --ink: #4a3236; --muted: #8d6f72; --accent: #b56a76;
+  --accent-ink: #fff; --line: rgba(181, 106, 118, .4); --card: rgba(255, 255, 255, .62);
+  --campo: #fff; --sombra: rgba(120, 60, 70, .12); --cielo: #c98893;
+}
+[data-estilo="lila"] {
+  --bg: #eeeaf6; --bg2: #ddd5ee; --ink: #352f4a; --muted: #7a7192; --accent: #7a64a6;
+  --accent-ink: #fff; --line: rgba(122, 100, 166, .38); --card: rgba(255, 255, 255, .6);
+  --campo: #fff; --sombra: rgba(70, 50, 120, .12); --cielo: #9c8cc4;
+}
+[data-estilo="jardin"] {
+  --bg: #f6f3ea; --bg2: #e9ead9; --ink: #353b31; --muted: #747a68; --accent: #6f8466;
+  --accent-ink: #fff; --line: rgba(111, 132, 102, .4); --card: rgba(255, 255, 255, .6);
+  --campo: #fff; --sombra: rgba(60, 70, 50, .1); --cielo: #8a9c7f;
+  --script: "Parisienne", "Segoe Script", cursive;
+}
+[data-estilo="clasica"] {
+  --bg: #faf8f3; --bg2: #efe9dc; --ink: #222; --muted: #6d665c; --accent: #a8864f;
+  --accent-ink: #fff; --line: rgba(168, 134, 79, .5); --card: #fff;
+  --campo: #fff; --sombra: rgba(40, 30, 10, .08); --cielo: #a8864f;
+  --script: "Pinyon Script", "Segoe Script", cursive;
+}
+
+/* ---------------------------------------------------------------- base */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0; min-height: 100vh; color: var(--ink); background: var(--bg);
+  font: 400 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased;
+}
+/* Números "de imprenta" en todas partes: los "de texto" que trae Cormorant hacían leer "#SofiMis15"
+ * como "Mis1s" y "21" como "2I". Va con !important porque el atajo `font:` de cada clase vuelve
+ * font-variant-numeric (y también font-feature-settings: probado en Edge, quedaba "normal") a cero. */
+*, *::before, *::after { font-variant-numeric: lining-nums !important; }
+/* El fondo degradado va en un elemento fijo y no en body con background-attachment: fixed, que
+ * Safari de iPhone ignora (se veía una franja cortada al hacer scroll). */
+.fondo { position: fixed; inset: 0; z-index: -1; background: radial-gradient(120% 70% at 50% 0%, var(--bg2), var(--bg) 70%); }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+button, input, textarea { font: inherit; color: inherit; }
+.oculto { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+main { max-width: 520px; margin: 0 auto; padding: 0 22px 40px; }
+section { padding: 64px 0 8px; text-align: center; }
+.sobre-titulo { font: 500 12px/1 var(--sans); letter-spacing: .32em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+h2 { font: 400 clamp(40px, 11vw, 50px)/1.15 var(--script); margin: 0 0 18px; font-weight: 400; }
+.texto { font: 400 21px/1.5 var(--serif); margin: 0 auto; max-width: 30ch; }
+.chico { font-size: 14px; color: var(--muted); }
+.divisor { width: 120px; height: 24px; color: var(--accent); margin: 14px auto; display: block; }
+
+/* Aparición suave al llegar a cada sección. Sin JS (o con "reducir movimiento") se ve todo de una. */
+.js .aparece { opacity: 0; transform: translateY(18px); transition: opacity .8s ease, transform .8s ease; }
+.js .aparece.visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .js .aparece { opacity: 1; transform: none; transition: none; }
+  .titila { animation: none !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ---------------------------------------------------------------- tapa (el "sobre" antes de abrir) */
+.tapa {
+  position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; text-align: center;
+  padding: 32px; background: radial-gradient(120% 80% at 50% 30%, var(--bg2), var(--bg) 75%);
+  transition: opacity .9s ease, visibility .9s, transform .9s ease;
+}
+.tapa.abierta { opacity: 0; visibility: hidden; transform: scale(1.04); }
+.tapa .cielo { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--cielo); }
+.tapa-centro { position: relative; display: grid; justify-items: center; gap: 14px; }
+.tapa .sobre-titulo { margin: 0; }
+.tapa-nombres { font: 400 clamp(52px, 16vw, 76px)/1.1 var(--script); margin: 0; }
+.sello {
+  width: 108px; height: 108px; border-radius: 50%; display: grid; place-items: center; margin: 10px 0;
+  font: 400 44px/1 var(--script); letter-spacing: 0; color: var(--accent-ink); padding-top: 6px;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--accent) 70%, #fff), var(--accent) 55%, color-mix(in srgb, var(--accent) 70%, #000));
+  box-shadow: 0 10px 30px var(--sombra), inset 0 0 0 5px color-mix(in srgb, var(--accent) 80%, #000 6%), inset 0 0 0 6px rgba(255, 255, 255, .35);
+  border: 0; cursor: pointer;
+}
+/* "L&M" en manuscrita a 44 px se salía del sello (se vio en la tarjeta de WhatsApp). */
+.sello.doble { font-size: 30px; }
+.boton-abrir { margin-top: 6px; }
+.tapa-error { max-width: 30ch; font: 400 19px/1.45 var(--serif); }
+
+/* ---------------------------------------------------------------- portada */
+.portada { position: relative; min-height: 100svh; display: grid; align-content: center; justify-items: center; text-align: center; padding: 70px 0 60px; isolation: isolate; }
+/* Marco en arco, doble y finito: el recurso clásico de las invitaciones impresas. */
+.portada::before, .portada::after { content: ""; position: absolute; z-index: -1; border: 1px solid var(--line); border-radius: 220px 220px 14px 14px; pointer-events: none; }
+.portada::before { inset: 34px 4px 30px; }
+.portada::after { inset: 41px 11px 37px; opacity: .6; }
+[data-estilo="jardin"] .portada::before, [data-estilo="jardin"] .portada::after,
+[data-estilo="rosa"] .portada::before, [data-estilo="rosa"] .portada::after { top: 70px; }
+[data-estilo="jardin"] .portada::after, [data-estilo="rosa"] .portada::after { top: 77px; }
+.portada .cielo { position: absolute; inset: 0 -22px; width: calc(100% + 44px); height: 100%; color: var(--cielo); z-index: -1; }
+.titila { animation: titilar 3.2s ease-in-out infinite; animation-delay: var(--d, 0s); transform-box: fill-box; transform-origin: center; }
+@keyframes titilar { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+.esquina { position: absolute; top: 4px; width: 46%; max-width: 230px; color: var(--accent); opacity: .9; }
+.esquina.izq { left: -14px; }
+.esquina.der { right: -14px; transform: scaleX(-1); }
+.ramita { width: 100%; height: auto; display: block; }
+.pie-ramas { display: flex; justify-content: center; gap: 0; width: 70%; max-width: 300px; color: var(--accent); margin-top: 26px; opacity: .85; }
+.pie-ramas svg:first-child { transform: scaleX(-1) rotate(8deg); }
+.pie-ramas svg:last-child { transform: rotate(8deg); }
+.deco { width: 62%; max-width: 260px; color: var(--accent); margin-bottom: 10px; }
+.abanico { width: 100%; height: auto; display: block; }
+.portada .nombres { font: 400 clamp(64px, 19vw, 96px)/1.05 var(--script); margin: 6px 0 0; }
+/* El "&" en cursiva de Cormorant y no en la manuscrita: en Pinyon Script (estilo clásica) salía un
+ * garabato de 8 px que no se leía como "y". */
+.portada .nombres .y { display: block; font: italic 400 .42em/1.3 var(--serif); color: var(--accent); }
+.foto-arco { width: min(74%, 300px); aspect-ratio: 4 / 5; border-radius: 999px 999px 18px 18px; overflow: hidden; margin: 18px auto 8px; outline: 1px solid var(--line); outline-offset: 7px; background: var(--card); }
+.foto-arco img { width: 100%; height: 100%; object-fit: cover; }
+.fecha-larga { font: 500 13px/1.7 var(--sans); letter-spacing: .26em; text-transform: uppercase; margin: 6px 0 0; }
+.ciudad { font: italic 400 20px/1.4 var(--serif); color: var(--muted); margin: 4px 0 0; }
+.bajar { margin-top: 34px; color: var(--accent); font-size: 12px; letter-spacing: .3em; text-transform: uppercase; text-decoration: none; display: grid; justify-items: center; gap: 6px; }
+.bajar::after { content: ""; width: 1px; height: 34px; background: currentColor; animation: bajar 2s ease-in-out infinite; transform-origin: top; }
+@keyframes bajar { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+/* ---------------------------------------------------------------- cuenta regresiva */
+.cuenta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 380px; margin: 0 auto; }
+.cuenta div { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 0 8px; }
+.cuenta b { display: block; font: 500 34px/1.1 var(--serif); }
+.cuenta b, .contador output { font-variant-numeric: lining-nums tabular-nums !important; }
+.cuenta span { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+/* ---------------------------------------------------------------- tarjetas (lugares, regalos, dress code) */
+.tarjeta { background: var(--card); border: 1px solid var(--line); border-radius: var(--radio); padding: 26px 22px; margin: 0 0 16px; box-shadow: 0 8px 24px var(--sombra); }
+.tarjeta h3 { font: 400 34px/1.2 var(--script); margin: 0 0 6px; }
+.tarjeta .hora { font: 500 13px/1 var(--sans); letter-spacing: .24em; color: var(--accent); margin: 0 0 12px; }
+.tarjeta .lugar { font: 600 21px/1.3 var(--serif); margin: 0; }
+.tarjeta .dir { color: var(--muted); margin: 2px 0 16px; }
+.botones { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.boton {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 22px;
+  border-radius: 999px; border: 1px solid var(--accent); background: transparent; color: var(--ink);
+  font: 500 12.5px/1 var(--sans); letter-spacing: .18em; text-transform: uppercase; text-decoration: none; cursor: pointer;
+}
+.boton.lleno { background: var(--accent); color: var(--accent-ink); }
+.boton:focus-visible, .sello:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.boton[disabled] { opacity: .55; cursor: default; }
+
+/* ---------------------------------------------------------------- cronograma */
+.cronograma { list-style: none; margin: 0 auto; padding: 0; max-width: 340px; text-align: left; position: relative; }
+.cronograma::before { content: ""; position: absolute; left: 66px; top: 8px; bottom: 8px; width: 1px; background: var(--line); }
+.cronograma li { display: grid; grid-template-columns: 56px 1fr; gap: 22px; padding: 9px 0; position: relative; }
+.cronograma li::after { content: ""; position: absolute; left: 62px; top: 19px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 1px solid var(--accent); }
+.cronograma .h { font: 500 14px/1.9 var(--sans); letter-spacing: .08em; color: var(--accent); text-align: right; }
+.cronograma .q { font: 500 20px/1.5 var(--serif); }
+
+/* ---------------------------------------------------------------- galería */
+.galeria { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.galeria button { padding: 0; border: 0; border-radius: 12px; overflow: hidden; aspect-ratio: 1; background: var(--card); cursor: zoom-in; }
+.galeria button:first-child { grid-column: span 2; aspect-ratio: 4 / 3; }
+/* Con 2, 4, 6... fotos, la última quedaba sola con un hueco al lado: va a lo ancho, como la primera. */
+.galeria button:last-child:nth-child(even) { grid-column: span 2; aspect-ratio: 4 / 3; }
+.galeria img { width: 100%; height: 100%; object-fit: cover; transition: opacity .5s; }
+.galeria img:not([src]) { opacity: 0; }
+.visor { position: fixed; inset: 0; z-index: 30; background: rgba(8, 8, 10, .94); display: none; }
+.visor.abierto { display: block; }
+.visor-tira { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.visor-tira::-webkit-scrollbar { display: none; }
+.visor-tira figure { flex: 0 0 100%; margin: 0; display: grid; place-items: center; scroll-snap-align: center; padding: 16px; }
+.visor-tira img { max-height: 88vh; object-fit: contain; border-radius: 6px; }
+.visor-cerrar { position: absolute; top: 14px; right: 14px; width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .4); background: rgba(0, 0, 0, .3); color: #fff; font-size: 24px; cursor: pointer; }
+
+/* ---------------------------------------------------------------- regalos */
+.datos { display: none; margin-top: 18px; text-align: left; }
+.datos.abiertos { display: block; }
+.dato { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 12px; background: var(--campo); border: 1px solid var(--line); margin-bottom: 8px; }
+.dato small { display: block; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.dato strong { font-weight: 500; word-break: break-all; }
+.copiar { flex: none; border: 0; background: transparent; color: var(--accent); font: 500 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; padding: 10px 4px; }
+
+/* ---------------------------------------------------------------- confirmación */
+.form { text-align: left; display: grid; gap: 18px; margin-top: 10px; }
+.campo label, .campo .etiqueta { display: block; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.campo input[type="text"], .campo textarea {
+  width: 100%; border: 1px solid var(--line); border-radius: 12px; background: var(--campo); padding: 13px 14px; font-size: 17px; outline: none;
+}
+.campo textarea { min-height: 92px; resize: vertical; }
+.campo input:focus, .campo textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+.eleccion { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.eleccion input { position: absolute; opacity: 0; pointer-events: none; }
+.eleccion label {
+  margin: 0; display: grid; place-items: center; min-height: 54px; border-radius: 14px; border: 1px solid var(--line);
+  background: var(--campo); font: 500 15px/1.2 var(--sans); letter-spacing: .04em; text-transform: none; color: var(--ink); cursor: pointer; text-align: center; padding: 6px;
+}
+.eleccion input:checked + label { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.eleccion input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+.contador { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 8px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--campo); }
+.contador + .contador { margin-top: 8px; }
+.contador .que { font-size: 16px; }
+.contador .ctrl { display: flex; align-items: center; gap: 4px; }
+.contador button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: transparent; font-size: 20px; line-height: 1; cursor: pointer; }
+.contador output { min-width: 30px; text-align: center; font: 600 20px/1 var(--serif); }
+.sub { display: grid; gap: 18px; }
+.sub[hidden] { display: none; }
+.aviso { padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); font-size: 15px; }
+.aviso.error { border-color: #c0392b; }
+.gracias { text-align: center; padding: 26px 18px; }
+.gracias h3 { font: 400 40px/1.2 var(--script); margin: 0 0 8px; }
+
+/* ---------------------------------------------------------------- pie */
+.hashtag { font: 500 22px/1.3 var(--serif); letter-spacing: .04em; color: var(--accent); }
+footer { text-align: center; padding: 56px 22px 46px; }
+footer .nombres { font: 400 48px/1.1 var(--script); margin: 0; }
+.credito { display: inline-block; margin-top: 34px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-decoration: none; opacity: .8; }
+
+/* Música: botón flotante chico, solo si la invitación trae canción. */
+.musica { position: fixed; right: 16px; bottom: 16px; z-index: 15; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); backdrop-filter: blur(8px); color: var(--accent); cursor: pointer; display: grid; place-items: center; box-shadow: 0 6px 18px var(--sombra); }
+.musica svg { width: 20px; height: 20px; }
+
+/* ---------------------------------------------------------------- tarjeta para WhatsApp (og.jpg, 1200x630) */
+.og { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+.og .tapa { position: absolute; }
+.og .tapa-nombres { font-size: 118px; }
+.og .sello { width: 120px; height: 120px; font-size: 48px; }
+.og .sello.doble { font-size: 30px; }
+</style>
+</head>
+<body>
+<div class="fondo"></div>
+<div class="tapa" role="dialog" aria-label="Invitación"><div class="esquina izq"><svg class="ramita" viewBox="0 0 220 120" aria-hidden="true"><path d="M6 114C70.2 100.1 136.8 21 212 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".8"/><g fill="currentColor"><path d="M0 0C7.6 -8.3 18.3 -7.5 25.4 0C18.3 7.5 7.6 8.3 0 0Z" transform="translate(25.3 108) rotate(-67.5)" opacity="0.8"/><path d="M0 0C9.5 -7 22.9 -6.3 31.8 0C22.9 6.3 9.5 7 0 0Z" transform="translate(39.1 101.8) rotate(20.8)" opacity="0.9"/><path d="M0 0C8.5 -6.1 20.4 -5.5 28.3 0C20.4 5.5 8.5 6.1 0 0Z" transform="translate(53 94.4) rotate(-70.6)" opacity="0.7"/><path d="M0 0C8.7 -6.5 20.8 -5.9 29 0C20.8 5.9 8.7 6.5 0 0Z" transform="translate(67.1 85.9) rotate(14.5)" opacity="0.9"/><path d="M0 0C6.8 -5.6 16.2 -5 22.5 0C16.2 5 6.8 5.6 0 0Z" transform="translate(81.2 76.8) rotate(-80.9)" opacity="0.7"/><path d="M0 0C6.5 -5.5 15.5 -5 21.6 0C15.5 5 6.5 5.5 0 0Z" transform="translate(95.5 67.2) rotate(6.9)" opacity="0.9"/><path d="M0 0C6.1 -5.2 14.6 -4.6 20.2 0C14.6 4.6 6.1 5.2 0 0Z" transform="translate(110 57.5) rotate(-82.2)" opacity="0.7"/><path d="M0 0C6.1 -6.7 14.6 -6 20.2 0C14.6 6 6.1 6.7 0 0Z" transform="translate(124.6 47.9) rotate(4.4)" opacity="0.7"/><path d="M0 0C5.4 -6.1 12.8 -5.5 17.8 0C12.8 5.5 5.4 6.1 0 0Z" transform="translate(139.4 38.7) rotate(-76.7)" opacity="0.9"/><path d="M0 0C5.5 -5.6 13.3 -5 18.5 0C13.3 5 5.5 5.6 0 0Z" transform="translate(154.5 30.3) rotate(16.7)" opacity="0.6"/><path d="M0 0C5.4 -4.9 12.9 -4.4 18 0C12.9 4.4 5.4 4.9 0 0Z" transform="translate(169.7 22.9) rotate(-61.9)" opacity="0.9"/><path d="M0 0C5 -3.6 11.9 -3.3 16.6 0C11.9 3.3 5 3.6 0 0Z" transform="translate(185.1 16.7) rotate(31)" opacity="0.7"/><path d="M0 0C6.6 -6 15.8 -5.4 22 0C15.8 5.4 6.6 6 0 0Z" transform="translate(212 10) rotate(-8.3)" opacity=".85"/></g></svg></div><div class="esquina der"><svg class="ramita" viewBox="0 0 220 120" aria-hidden="true"><path d="M6 114C59.4 98.7 135.1 25.7 212 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".8"/><g fill="currentColor"><path d="M0 0C9.4 -8.6 22.6 -7.7 31.4 0C22.6 7.7 9.4 8.6 0 0Z" transform="translate(22.7 107.8) rotate(-60.8)" opacity="0.9"/><path d="M0 0C7.4 -8.1 17.8 -7.3 24.7 0C17.8 7.3 7.4 8.1 0 0Z" transform="translate(35.2 101.7) rotate(17.8)" opacity="0.8"/><path d="M0 0C7.5 -8.5 18 -7.7 25 0C18 7.7 7.5 8.5 0 0Z" transform="translate(48.3 94.4) rotate(-67.4)" opacity="0.9"/><path d="M0 0C8.1 -6.7 19.3 -6 26.8 0C19.3 6 8.1 6.7 0 0Z" transform="translate(61.9 86.3) rotate(10.7)" opacity="0.9"/><path d="M0 0C8.2 -6.6 19.7 -5.9 27.3 0C19.7 5.9 8.2 6.6 0 0Z" transform="translate(76 77.4) rotate(-81.3)" opacity="0.7"/><path d="M0 0C7.4 -6 17.7 -5.4 24.6 0C17.7 5.4 7.4 6 0 0Z" transform="translate(90.6 68.2) rotate(0.1)" opacity="0.9"/><path d="M0 0C6 -6.1 14.4 -5.5 19.9 0C14.4 5.5 6 6.1 0 0Z" transform="translate(105.5 58.8) rotate(-73.3)" opacity="0.6"/><path d="M0 0C6.9 -6.1 16.6 -5.5 23.1 0C16.6 5.5 6.9 6.1 0 0Z" transform="translate(120.7 49.5) rotate(4.7)" opacity="0.6"/><path d="M0 0C5.9 -5 14.1 -4.5 19.6 0C14.1 4.5 5.9 5 0 0Z" transform="translate(136.3 40.5) rotate(-73.9)" opacity="0.7"/><path d="M0 0C5.6 -5.9 13.5 -5.3 18.7 0C13.5 5.3 5.6 5.9 0 0Z" transform="translate(152.1 32.1) rotate(16.1)" opacity="0.7"/><path d="M0 0C5.2 -4.4 12.5 -4 17.3 0C12.5 4 5.2 4.4 0 0Z" transform="translate(168.1 24.5) rotate(-66.1)" opacity="0.9"/><path d="M0 0C4.9 -4.6 11.8 -4.1 16.4 0C11.8 4.1 4.9 4.6 0 0Z" transform="translate(184.2 18) rotate(22.1)" opacity="0.8"/><path d="M0 0C6.6 -6 15.8 -5.4 22 0C15.8 5.4 6.6 6 0 0Z" transform="translate(212 10) rotate(-11.6)" opacity=".85"/></g></svg></div>
+  <div class="tapa-centro">
+    <p class="sobre-titulo">Nos casamos</p>
+    <p class="tapa-nombres">Lucía &amp; Martín</p>
+    <button class="sello doble" type="button" data-abrir disabled aria-label="Abrir invitación">L&amp;M</button>
+    <button class="boton boton-abrir" type="button" data-abrir disabled>Abrir invitación</button><div class="pie-ramas"><svg class="ramita" viewBox="0 0 180 90" aria-hidden="true"><path d="M6 84C57.1 74.2 121.5 5.4 172 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".8"/><g fill="currentColor"><path d="M0 0C8.6 -7.6 20.5 -6.8 28.5 0C20.5 6.8 8.6 7.6 0 0Z" transform="translate(21.7 79.4) rotate(-53.8)" opacity="0.9"/><path d="M0 0C9.1 -8 21.9 -7.2 30.5 0C21.9 7.2 9.1 8 0 0Z" transform="translate(37.1 72.6) rotate(11.3)" opacity="0.9"/><path d="M0 0C8 -7 19.2 -6.3 26.7 0C19.2 6.3 8 7 0 0Z" transform="translate(53 63.9) rotate(-76.1)" opacity="0.6"/><path d="M0 0C7.8 -7.3 18.8 -6.6 26.2 0C18.8 6.6 7.8 7.3 0 0Z" transform="translate(69.1 54.2) rotate(16.6)" opacity="0.7"/><path d="M0 0C7.7 -7 18.5 -6.3 25.7 0C18.5 6.3 7.7 7 0 0Z" transform="translate(85.4 44) rotate(-79)" opacity="0.9"/><path d="M0 0C7.3 -6.1 17.6 -5.5 24.4 0C17.6 5.5 7.3 6.1 0 0Z" transform="translate(101.7 34) rotate(13.6)" opacity="0.6"/><path d="M0 0C5.3 -4.8 12.6 -4.3 17.6 0C12.6 4.3 5.3 4.8 0 0Z" transform="translate(117.9 25) rotate(-73.2)" opacity="0.7"/><path d="M0 0C5 -5.2 12 -4.7 16.7 0C12 4.7 5 5.2 0 0Z" transform="translate(133.8 17.5) rotate(22.1)" opacity="0.9"/><path d="M0 0C5.4 -5 13 -4.5 18.1 0C13 4.5 5.4 5 0 0Z" transform="translate(149.3 12.2) rotate(-63.6)" opacity="0.7"/><path d="M0 0C6.6 -6 15.8 -5.4 22 0C15.8 5.4 6.6 6 0 0Z" transform="translate(172 10) rotate(5.2)" opacity=".85"/></g></svg><svg class="ramita" viewBox="0 0 180 90" aria-hidden="true"><path d="M6 84C54.3 72 108.5 17.8 172 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".8"/><g fill="currentColor"><path d="M0 0C7.9 -8.3 19 -7.5 26.4 0C19 7.5 7.9 8.3 0 0Z" transform="translate(20.7 79.2) rotate(-56.6)" opacity="0.9"/><path d="M0 0C8.7 -7.6 20.8 -6.8 28.9 0C20.8 6.8 8.7 7.6 0 0Z" transform="translate(34.9 72.9) rotate(17.3)" opacity="0.9"/><path d="M0 0C7.1 -7.8 17.1 -7 23.7 0C17.1 7 7.1 7.8 0 0Z" transform="translate(49.4 65.2) rotate(-79.2)" opacity="0.9"/><path d="M0 0C8.4 -6.1 20.2 -5.5 28.1 0C20.2 5.5 8.4 6.1 0 0Z" transform="translate(64.3 56.6) rotate(13.1)" opacity="0.9"/><path d="M0 0C6 -6.2 14.4 -5.6 20 0C14.4 5.6 6 6.2 0 0Z" transform="translate(79.6 47.6) rotate(-65)" opacity="0.8"/><path d="M0 0C6 -6.3 14.3 -5.7 19.9 0C14.3 5.7 6 6.3 0 0Z" transform="translate(95.3 38.6) rotate(8.7)" opacity="0.8"/><path d="M0 0C5.8 -5.5 14 -5 19.5 0C14 5 5.8 5.5 0 0Z" transform="translate(111.5 30) rotate(-77.6)" opacity="0.7"/><path d="M0 0C5.2 -5 12.4 -4.5 17.2 0C12.4 4.5 5.2 5 0 0Z" transform="translate(128 22.3) rotate(11.3)" opacity="0.9"/><path d="M0 0C5.6 -3.9 13.4 -3.5 18.6 0C13.4 3.5 5.6 3.9 0 0Z" transform="translate(145 16) rotate(-53.6)" opacity="0.8"/><path d="M0 0C6.6 -6 15.8 -5.4 22 0C15.8 5.4 6.6 6 0 0Z" transform="translate(172 10) rotate(-7)" opacity=".85"/></g></svg></div>
+  </div>
+</div>
+<main></main>
+<script type="application/json" id="config">{"tipo":"boda","estilo":"jardin","slug":"lucia-y-martin","nombres":"Lucía & Martín","credito":null}</script>
+<script>// Adornos de la invitación, dibujados por código (SVG) en el navegador del invitado.
+//
+// Por qué procedurales y no imágenes: una ramita en PNG pesa 40-120 KB y tiene UN color; acá cada estilo
+// la pinta con su paleta (currentColor), se ve nítida en cualquier pantalla y pesa 0 KB extra. La semilla
+// fija (por estilo) hace que la misma invitación se vea idéntica en cada visita y en cada captura, cosa
+// que con Math.random() no pasaría: las fotos de Mercado Libre tienen que coincidir con lo que se entrega.
+//
+// Todo lo que sale de acá es SVG armado con números, nunca con texto del cliente: no hay nada que escapar.
+"use strict";
+
+const Adornos = (() => {
+  // mulberry32: PRNG chico y determinista. No hace falta calidad criptográfica, solo repetibilidad.
+  function azar(semilla) {
+    let a = semilla >>> 0;
+    return () => {
+      a = (a + 0x6d2b79f5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const f = (n) => Math.round(n * 10) / 10;   // 1 decimal: el SVG pesa la mitad y no se nota
+
+  // Punto y tangente de una Bézier cúbica: las hojas se apoyan en el tallo con su ángulo real.
+  function bezier(p0, p1, p2, p3, t) {
+    const u = 1 - t;
+    const x = u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0];
+    const y = u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1];
+    const dx = 3 * u * u * (p1[0] - p0[0]) + 6 * u * t * (p2[0] - p1[0]) + 3 * t * t * (p3[0] - p2[0]);
+    const dy = 3 * u * u * (p1[1] - p0[1]) + 6 * u * t * (p2[1] - p1[1]) + 3 * t * t * (p3[1] - p2[1]);
+    return [x, y, Math.atan2(dy, dx)];
+  }
+
+  // Hoja en forma de almendra, de largo L y ancho W, apoyada en (0,0) y apuntando a +x.
+  function hoja(L, W) {
+    return `M0 0C${f(L * 0.3)} ${f(-W)} ${f(L * 0.72)} ${f(-W * 0.9)} ${f(L)} 0C${f(L * 0.72)} ${f(W * 0.9)} ${f(L * 0.3)} ${f(W)} 0 0Z`;
+  }
+
+  // Ramita: tallo curvo con hojas alternadas que se achican hacia la punta. Probado con 6-14 hojas:
+  // con menos parece un palito, con más se empasta en celulares chicos.
+  function ramita(semilla, { ancho = 220, alto = 120, hojas = 10, bayas = 0 } = {}) {
+    const r = azar(semilla);
+    const p0 = [6, alto - 6], p3 = [ancho - 8, 10];
+    const p1 = [ancho * (0.25 + r() * 0.1), alto * (0.95 - r() * 0.15)];
+    const p2 = [ancho * (0.6 + r() * 0.1), alto * (0.05 + r() * 0.2)];
+    let d = "";
+    const piezas = [];
+    for (let i = 0; i < hojas; i++) {
+      const t = 0.1 + (i / hojas) * 0.85;
+      const [x, y, ang] = bezier(p0, p1, p2, p3, t);
+      const lado = i % 2 ? 1 : -1;
+      const tam = 1 - t * 0.55;
+      const L = (26 + r() * 10) * tam, W = (7 + r() * 3) * tam;
+      const giro = ang + lado * (0.55 + r() * 0.35);
+      const op = f(0.6 + r() * 0.35);
+      piezas.push(`<path d="${hoja(L, W)}" transform="translate(${f(x)} ${f(y)}) rotate(${f(giro * 57.2958)})" opacity="${op}"/>`);
+    }
+    // Hoja final en la punta, siguiendo el tallo.
+    const [xf, yf, af] = bezier(p0, p1, p2, p3, 1);
+    piezas.push(`<path d="${hoja(22, 6)}" transform="translate(${f(xf)} ${f(yf)}) rotate(${f(af * 57.2958)})" opacity=".85"/>`);
+    for (let i = 0; i < bayas; i++) {
+      const [x, y] = bezier(p0, p1, p2, p3, 0.2 + r() * 0.6);
+      piezas.push(`<circle cx="${f(x + (r() - 0.5) * 30)}" cy="${f(y + (r() - 0.5) * 30)}" r="${f(2 + r() * 2)}" opacity=".7"/>`);
+    }
+    d = `M${p0[0]} ${p0[1]}C${f(p1[0])} ${f(p1[1])} ${f(p2[0])} ${f(p2[1])} ${p3[0]} ${p3[1]}`;
+    return `<svg class="ramita" viewBox="0 0 ${ancho} ${alto}" aria-hidden="true">` +
+      `<path d="${d}" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>` +
+      `<g fill="currentColor">${piezas.join("")}</g></svg>`;
+  }
+
+  // Destello de cuatro puntas (el brillo clásico de las invitaciones de 15).
+  const DESTELLO = "M0-1C.08-.2.2-.08 1 0 .2.08.08.2 0 1-.08.2-.2.08-1 0-.2-.08-.08-.2 0-1Z";
+
+  // Cielo de estrellas para el fondo de la portada: puntos chicos + algunos destellos que titilan.
+  // `alto` es la proporción del lienzo (100 de ancho): 200 para un celular parado, 52 para la tarjeta
+  // de WhatsApp. Se descartó estirar un 100x100 con preserveAspectRatio="none": en el celular los
+  // destellos salían el doble de altos que de anchos.
+  function cielo(semilla, { puntos = 70, destellos = 9, alto = 200 } = {}) {
+    const r = azar(semilla);
+    const p = [];
+    for (let i = 0; i < puntos; i++) {
+      p.push(`<circle cx="${f(r() * 100)}" cy="${f(r() * alto)}" r="${f(0.14 + r() * 0.26)}" opacity="${f(0.25 + r() * 0.6)}"/>`);
+    }
+    const d = [];
+    for (let i = 0; i < destellos; i++) {
+      const s = 1.2 + r() * 2.2;
+      d.push(`<path class="titila" style="--d:${f(r() * 4)}s" d="${DESTELLO}" ` +
+        `transform="translate(${f(r() * 100)} ${f(r() * alto)}) scale(${f(s * 0.8)} ${f(s)})"/>`);
+    }
+    return `<svg class="cielo" viewBox="0 0 100 ${alto}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">` +
+      `<g fill="currentColor">${p.join("")}${d.join("")}</g></svg>`;
+  }
+
+  function destello(tam = 18) {
+    return `<svg class="destello" width="${tam}" height="${tam}" viewBox="-1 -1 2 2" aria-hidden="true"><path d="${DESTELLO}" fill="currentColor"/></svg>`;
+  }
+
+  // Abanico art déco (estilo "clásica"): rayos finos que salen de un punto, con dos arcos.
+  function abanico({ rayos = 15, radio = 90 } = {}) {
+    const l = [];
+    for (let i = 0; i <= rayos; i++) {
+      const a = Math.PI + (i / rayos) * Math.PI;
+      l.push(`<line x1="100" y1="100" x2="${f(100 + Math.cos(a) * radio)}" y2="${f(100 + Math.sin(a) * radio)}"/>`);
+    }
+    return `<svg class="abanico" viewBox="0 0 200 104" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width=".8">` +
+      `${l.join("")}<path d="M${100 - radio} 100A${radio} ${radio} 0 0 1 ${100 + radio} 100"/>` +
+      `<path d="M${100 - radio * 0.55} 100A${radio * 0.55} ${radio * 0.55} 0 0 1 ${100 + radio * 0.55} 100"/></g></svg>`;
+  }
+
+  // Divisor entre secciones: línea, rombo y línea; cambia el centro según el estilo.
+  function divisor(estilo) {
+    const centro = estilo === "jardin" || estilo === "rosa"
+      ? `<g fill="currentColor"><path d="${hoja(9, 3)}" transform="translate(30 6) rotate(-150)"/><path d="${hoja(9, 3)}" transform="translate(30 6) rotate(-30)"/><circle cx="30" cy="6" r="1.6"/></g>`
+      : `<path d="M30 1.5 34.5 6 30 10.5 25.5 6Z" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="30" cy="6" r="1.2" fill="currentColor"/>`;
+    return `<svg class="divisor" viewBox="0 0 60 12" aria-hidden="true"><path d="M0 6H22M38 6H60" stroke="currentColor" stroke-width=".7"/>${centro}</svg>`;
+  }
+
+  // Qué adorno lleva la portada de cada estilo (los 5 revisados a ojo en 375 px). En los de fondo
+  // con cielo ("gala", "lila") va solo brillo: ramitas y estrellas juntas cargan la portada.
+  function portada(estilo) {
+    switch (estilo) {
+      case "gala": return { fondo: cielo(15), arriba: "", abajo: "" };
+      case "lila": return { fondo: cielo(7, { puntos: 45, destellos: 7 }), arriba: "", abajo: "" };
+      case "rosa": return {
+        fondo: cielo(3, { puntos: 0, destellos: 6 }),
+        arriba: `<div class="esquina izq">${ramita(11, { hojas: 11, bayas: 3 })}</div><div class="esquina der">${ramita(23, { hojas: 11, bayas: 3 })}</div>`,
+        abajo: "",
+      };
+      case "jardin": return {
+        fondo: "",
+        arriba: `<div class="esquina izq">${ramita(5, { hojas: 12 })}</div><div class="esquina der">${ramita(9, { hojas: 12 })}</div>`,
+        abajo: `<div class="pie-ramas">${ramita(31, { ancho: 180, alto: 90, hojas: 9 })}${ramita(37, { ancho: 180, alto: 90, hojas: 9 })}</div>`,
+      };
+      case "clasica": return { fondo: "", arriba: `<div class="deco">${abanico()}</div>`, abajo: "" };
+      default: return { fondo: "", arriba: "", abajo: "" };
+    }
+  }
+
+  return { ramita, cielo, destello, abanico, divisor, portada, azar };
+})();
+
+
+// Motor de la invitación: corre en el celular del invitado.
+//
+// Flujo: lee la clave del link (#k=...), descarga d.bin, lo descifra con AES-GCM y arma la página.
+// Por qué cifrar: GitHub Pages gratis exige repo PÚBLICO, y una invitación tiene el nombre completo de una
+// chica de 15, la dirección del salón, la fecha y datos bancarios. Sin cifrar, cualquiera que mire el
+// repo (o un buscador) los lee. La clave va después del "#", que el navegador NUNCA manda al servidor:
+// ni GitHub la ve. Descartado: contraseña para entrar (los invitados mayores se traban y llaman a la
+// familia), y hosting privado (cuesta plata; el plan es USD 0).
+//
+// Todo texto del cliente pasa por esc() antes de entrar al HTML: lo escribe una persona en un
+// formulario y lo lee gente que no eligió confiar en ella.
+"use strict";
+
+(() => {
+  const TZ = "America/Argentina/Buenos_Aires";
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ESC[c]);
+  const tapa = $(".tapa");
+  const config = JSON.parse($("#config").textContent);   // lo público: tipo, estilo, slug, nombres
+
+  // ------------------------------------------------------------ guardado local (puede no existir)
+  // En modo incógnito, o con datos bloqueados, localStorage tira error: la invitación igual funciona.
+  const local = {
+    leer(k) { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch { return null; } },
+    guardar(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* sin memoria: no pasa nada */ } },
+  };
+
+  // ------------------------------------------------------------ link: clave e invitación personal
+  // #k=CLAVE&para=Familia_Pérez&n=4 · "para" y "n" los arma la planilla para cada invitado.
+  // Guion bajo en lugar de espacio: la fórmula de Sheets lo escribe así y el link queda más legible.
+  function leerLink() {
+    const p = new URLSearchParams(location.hash.slice(1));
+    const para = (p.get("para") || "").replace(/_/g, " ").trim().slice(0, 80);
+    const n = parseInt(p.get("n") || "", 10);
+    return { k: p.get("k") || "", para: para || null, n: n >= 1 && n <= 30 ? n : null };
+  }
+
+  function b64url(s) {
+    const b = atob(s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4));
+    return Uint8Array.from(b, (c) => c.charCodeAt(0));
+  }
+
+  async function clave(k) {
+    const bytes = b64url(k);
+    if (bytes.length !== 16) throw new Error("clave");
+    return crypto.subtle.importKey("raw", bytes, "AES-GCM", false, ["decrypt"]);
+  }
+
+  // Formato de cada .bin: 12 bytes de IV + texto cifrado (con la etiqueta de GCM al final).
+  async function bajarYDescifrar(key, ruta) {
+    const r = await fetch(ruta, { cache: "no-cache" });
+    if (!r.ok) throw new Error(`descarga ${ruta}: ${r.status}`);
+    const buf = new Uint8Array(await r.arrayBuffer());
+    return crypto.subtle.decrypt({ name: "AES-GCM", iv: buf.slice(0, 12) }, key, buf.slice(12));
+  }
+
+  // ------------------------------------------------------------ fechas (siempre en hora argentina)
+  const fmt = (o) => new Intl.DateTimeFormat("es-AR", { timeZone: TZ, ...o });
+  function fechaLarga(iso) {
+    const d = new Date(iso);
+    const dia = fmt({ weekday: "long" }).format(d);
+    return `${dia} ${fmt({ day: "numeric" }).format(d)} de ${fmt({ month: "long" }).format(d)} · ${fmt({ year: "numeric" }).format(d)}`;
+  }
+  const fechaCorta = (iso) => fmt({ day: "numeric", month: "long" }).format(new Date(iso));
+
+  // ------------------------------------------------------------ armado de la página
+  const SOBRE = { quince: "Mis 15", boda: "Nos casamos" };
+
+  function nombresHTML(d) {
+    // "Lucía & Martín": el & va más chico y en el color de acento, en su propia línea.
+    const partes = d.nombres.split(/\s*&\s*/);
+    return partes.length === 2
+      ? `${esc(partes[0])}<span class="y">&amp;</span>${esc(partes[1])}`
+      : esc(d.nombres);
+  }
+
+  function seccion(id, sobre, titulo, cuerpo) {
+    return `<section id="${id}" class="aparece">${sobre ? `<p class="sobre-titulo">${esc(sobre)}</p>` : ""}` +
+      `${titulo ? `<h2>${esc(titulo)}</h2>` : ""}${cuerpo}</section>`;
+  }
+
+  function portadaHTML(d) {
+    const a = Adornos.portada(d.estilo);
+    const foto = d.portada ? `<div class="foto-arco"><img data-f="${esc(d.portada.f)}" alt="" width="${d.portada.w}" height="${d.portada.h}"></div>` : "";
+    return `<header class="portada" id="inicio">${a.fondo}${a.arriba}
+      <p class="sobre-titulo">${SOBRE[d.tipo]}</p>
+      ${foto}
+      <h1 class="nombres">${nombresHTML(d)}</h1>
+      ${Adornos.divisor(d.estilo)}
+      <p class="fecha-larga">${esc(fechaLarga(d.fecha))}</p>
+      ${d.ciudad ? `<p class="ciudad">${esc(d.ciudad)}</p>` : ""}
+      ${a.abajo}
+      <a class="bajar" href="#cuenta">Deslizá</a>
+    </header>`;
+  }
+
+  function cuentaHTML(d) {
+    const u = ["días", "horas", "min", "seg"];
+    return seccion("cuenta", "Falta muy poco", null,
+      `${d.frase ? `<p class="texto">${esc(d.frase)}</p>${Adornos.divisor(d.estilo)}` : ""}` +
+      `<div class="cuenta" role="timer" aria-live="off">${u.map((x) => `<div><b data-u="${x}">–</b><span>${x}</span></div>`).join("")}</div>`);
+  }
+
+  function mapa(l) {
+    // Link de búsqueda y no coordenadas: abre la app de Mapas del celular en iPhone y Android.
+    return l.mapa || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${l.nombre}, ${l.direccion}`)}`;
+  }
+
+  function lugaresHTML(d) {
+    // Con un solo lugar, su nombre ("Fiesta") va de título de la sección; repetirlo en la tarjeta
+    // quedaba "La fiesta / Fiesta".
+    const uno = d.lugares.length === 1;
+    const t = d.lugares.map((l, i) => `<div class="tarjeta">
+        ${uno ? "" : `<h3>${esc(l.titulo)}</h3>`}
+        <p class="hora">${esc(l.hora)} H</p>
+        <p class="lugar">${esc(l.nombre)}</p>
+        <p class="dir">${esc(l.direccion)}</p>
+        <div class="botones">
+          <a class="boton lleno" href="${esc(mapa(l))}" target="_blank" rel="noopener">Cómo llegar</a>
+          ${i === 0 ? `<button class="boton" type="button" data-agendar>Agendar</button>` : ""}
+        </div>
+      </div>`).join("");
+    return seccion("lugares", "Cuándo y dónde", uno ? d.lugares[0].titulo : "La celebración", t);
+  }
+
+  function cronogramaHTML(d) {
+    if (!d.cronograma?.length) return "";
+    const li = d.cronograma.map((c) => `<li><span class="h">${esc(c.hora)}</span><span class="q">${esc(c.que)}</span></li>`).join("");
+    return seccion("cronograma", "La noche", "Cronograma", `<ol class="cronograma">${li}</ol>`);
+  }
+
+  function dressHTML(d) {
+    if (!d.dress_code) return "";
+    return seccion("dress", "Dress code", d.dress_code.titulo,
+      d.dress_code.detalle ? `<p class="texto">${esc(d.dress_code.detalle)}</p>` : "");
+  }
+
+  function galeriaHTML(d) {
+    if (!d.galeria?.length) return "";
+    const b = d.galeria.map((g, i) => `<button type="button" data-ver="${i}" aria-label="Ver foto ${i + 1}"><img data-f="${esc(g.f)}" alt="" width="${g.w}" height="${g.h}"></button>`).join("");
+    return seccion("galeria", "Momentos", "Galería", `<div class="galeria">${b}</div>`);
+  }
+
+  function regalosHTML(d) {
+    const r = d.regalos;
+    if (!r) return "";
+    const filas = [["Alias", r.alias], ["CBU / CVU", r.cbu], ["Titular", r.titular], ["Banco", r.banco]]
+      .filter(([, v]) => v)
+      .map(([k, v]) => `<div class="dato"><div><small>${k}</small><strong>${esc(v)}</strong></div>` +
+        (k === "Titular" || k === "Banco" ? "" : `<button class="copiar" type="button" data-copiar="${esc(v)}">Copiar</button>`) + `</div>`)
+      .join("");
+    const datos = filas ? `<div class="botones"><button class="boton" type="button" data-datos>Ver datos</button></div><div class="datos">${filas}</div>` : "";
+    return seccion("regalos", "Un detalle", "Regalos",
+      `<div class="tarjeta">${r.texto ? `<p class="texto">${esc(r.texto)}</p>` : ""}` +
+      `${r.sobres ? `<p class="chico">${esc(r.sobres)}</p>` : ""}${datos}</div>`);
+  }
+
+  function confirmacionHTML(d, link) {
+    const c = d.confirmacion;
+    if (!c) return "";
+    const hasta = c.hasta ? `<p class="texto">Confirmá tu asistencia antes del <b>${esc(fechaCorta(c.hasta + "T12:00:00-03:00"))}</b>.</p>` : "";
+    const cerrada = c.hasta && Date.now() > new Date(c.hasta + "T23:59:59-03:00").getTime();
+    if (cerrada) {
+      const wa = c.whatsapp ? `<div class="botones"><a class="boton" href="https://wa.me/${esc(c.whatsapp.replace(/\D/g, ""))}" target="_blank" rel="noopener">Escribinos</a></div>` : "";
+      return seccion("confirmar", "Asistencia", "Confirmación", `<div class="aviso">La confirmación cerró el ${esc(fechaCorta(c.hasta + "T12:00:00-03:00"))}. Si necesitás avisar algo, escribí a la familia.</div>${wa}`);
+    }
+    const maxP = link.n || c.max_personas || 10;
+    const menu = c.menu_especial ? `
+      <div class="campo"><span class="etiqueta">¿Alguien necesita menú especial?</span>
+        <div class="eleccion"><input type="radio" name="menu" id="menu-no" value="no" checked><label for="menu-no">No</label>
+        <input type="radio" name="menu" id="menu-si" value="si"><label for="menu-si">Sí</label></div></div>
+      <div class="sub" id="menu-detalle" hidden>
+        <div>${["Sin TACC (celíacos)", "Vegetariano", "Vegano"].map((q, i) => contador(`m${i}`, q, 0, maxP)).join("")}</div>
+        <div class="campo"><label for="otra">Otra restricción o alergia</label><input type="text" id="otra" name="otra" maxlength="120" placeholder="Ej.: alergia al maní"></div>
+      </div>` : "";
+    const para = d.tipo === "boda" ? "los novios" : d.nombres;
+    return seccion("confirmar", "Asistencia", "Confirmación", `${hasta}
+      <form class="form" novalidate>
+        ${link.para ? `<p class="aviso">Invitación para <b>${esc(link.para)}</b>${link.n ? ` · ${link.n} ${link.n === 1 ? "lugar" : "lugares"}` : ""}</p>` : ""}
+        <div class="campo"><label for="nombre">Nombre y apellido</label>
+          <input type="text" id="nombre" name="nombre" maxlength="80" autocomplete="name" required value="${esc(link.para || "")}"></div>
+        <div class="campo"><span class="etiqueta">¿Venís?</span>
+          <div class="eleccion"><input type="radio" name="va" id="va-si" value="si"><label for="va-si">¡Sí, voy!</label>
+          <input type="radio" name="va" id="va-no" value="no"><label for="va-no">No puedo ir</label></div></div>
+        <div class="sub" id="si-va" hidden>
+          <div class="campo"><span class="etiqueta">¿Cuántos son, con vos?</span>${contador("personas", "Personas", 1, maxP, 1)}</div>
+          ${menu}
+          ${c.cancion ? `<div class="campo"><label for="cancion">Una canción que no puede faltar</label><input type="text" id="cancion" name="cancion" maxlength="120" placeholder="Tema y artista"></div>` : ""}
+        </div>
+        ${c.mensaje ? `<div class="campo"><label for="mensaje">Un mensaje para ${esc(para)} (opcional)</label><textarea id="mensaje" name="mensaje" maxlength="500"></textarea></div>` : ""}
+        <div class="aviso error" id="error" hidden></div>
+        <div class="botones"><button class="boton lleno" type="submit">Enviar confirmación</button></div>
+      </form>`);
+  }
+
+  function contador(id, que, valor, max, min = 0) {
+    return `<div class="contador" data-contador="${id}" data-min="${min}" data-max="${max}"><span class="que">${esc(que)}</span>` +
+      `<span class="ctrl"><button type="button" data-paso="-1" aria-label="Uno menos">−</button>` +
+      `<output id="${id}" aria-live="polite">${valor}</output>` +
+      `<button type="button" data-paso="1" aria-label="Uno más">+</button></span></div>`;
+  }
+
+  function pieHTML(d) {
+    const hashtag = d.hashtag ? seccion("hashtag", "Compartí tus fotos", null, `<p class="hashtag">${esc(d.hashtag)}</p>`) : "";
+    const credito = config.credito ? `<a class="credito" href="${esc(config.credito.url)}" target="_blank" rel="noopener">${esc(config.credito.texto)}</a>` : "";
+    return `${hashtag}<footer class="aparece"><p class="sobre-titulo">Te esperamos</p><p class="nombres">${esc(d.nombres)}</p>${credito}</footer>`;
+  }
+
+  // ------------------------------------------------------------ comportamiento
+  function cuentaRegresiva(d) {
+    const fin = new Date(d.fecha).getTime();
+    const celdas = Object.fromEntries($$("[data-u]").map((b) => [b.dataset.u, b]));
+    const pintar = () => {
+      let s = Math.max(0, Math.floor((fin - Date.now()) / 1000));
+      const v = { días: Math.floor(s / 86400), horas: Math.floor(s / 3600) % 24, min: Math.floor(s / 60) % 60, seg: s % 60 };
+      for (const [k, b] of Object.entries(celdas)) b.textContent = String(v[k]).padStart(k === "días" ? 1 : 2, "0");
+      return s;
+    };
+    if (pintar() > 0) setInterval(pintar, 1000);
+  }
+
+  // Agendar: Google Calendar en Android/compu; en iPhone, el .ics abre directo el Calendario.
+  function agendar(d) {
+    const ics = (iso) => new Date(iso).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+    const titulo = d.tipo === "boda" ? `Casamiento de ${d.nombres}` : `15 de ${d.nombres}`;
+    const l = d.lugares[0];
+    const donde = `${l.nombre}, ${l.direccion}`;
+    const fin = d.fin || new Date(new Date(d.fecha).getTime() + 6 * 3600e3).toISOString();
+    if (/iPhone|iPad|Macintosh/.test(navigator.userAgent) && "ontouchend" in document) {
+      const txt = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//invitacion//ES", "BEGIN:VEVENT",
+        `UID:${config.slug}@invitacion`, `DTSTAMP:${ics(new Date().toISOString())}`, `DTSTART:${ics(d.fecha)}`, `DTEND:${ics(fin)}`,
+        `SUMMARY:${titulo}`, `LOCATION:${donde.replace(/[,;]/g, "\\$&")}`, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([txt], { type: "text/calendar" }));
+      a.download = `${config.slug}.ics`;
+      a.click();
+      return;
+    }
+    const q = new URLSearchParams({ action: "TEMPLATE", text: titulo, dates: `${ics(d.fecha)}/${ics(fin)}`, location: donde });
+    window.open(`https://calendar.google.com/calendar/render?${q}`, "_blank", "noopener");
+  }
+
+  async function copiar(texto, boton) {
+    try { await navigator.clipboard.writeText(texto); } catch {
+      // Navegadores internos (Instagram, Facebook) a veces no dejan usar el portapapeles moderno.
+      const t = Object.assign(document.createElement("textarea"), { value: texto });
+      document.body.append(t); t.select(); document.execCommand("copy"); t.remove();
+    }
+    const antes = boton.textContent;
+    boton.textContent = "Copiado";
+    setTimeout(() => { boton.textContent = antes; }, 1600);
+  }
+
+  function visor(urls, desde) {
+    let v = $(".visor");
+    if (!v) {
+      v = document.createElement("div");
+      v.className = "visor";
+      v.setAttribute("role", "dialog");
+      v.setAttribute("aria-label", "Fotos");
+      v.innerHTML = `<div class="visor-tira"></div><button class="visor-cerrar" type="button" aria-label="Cerrar">×</button>`;
+      document.body.append(v);
+      v.querySelector(".visor-cerrar").onclick = () => v.classList.remove("abierto");
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") v.classList.remove("abierto"); });
+    }
+    const tira = v.querySelector(".visor-tira");
+    tira.innerHTML = urls.map((u) => `<figure><img src="${u}" alt=""></figure>`).join("");
+    v.classList.add("abierto");
+    tira.scrollLeft = desde * tira.clientWidth;
+  }
+
+  // ------------------------------------------------------------ confirmación
+  function idDispositivo() {
+    // Si alguien cambia su respuesta desde el mismo celular, la planilla reemplaza la fila anterior
+    // en vez de sumar una nueva (si no, el panel contaría dos veces a la misma familia).
+    let id = local.leer("inv-dispositivo");
+    if (!id) { id = crypto.getRandomValues(new Uint32Array(2)).join("-"); local.guardar("inv-dispositivo", id); }
+    return id;
+  }
+
+  function armarConfirmacion(d, link) {
+    const form = $("#confirmar form");
+    if (!form) return;
+    const clave = `inv-${config.slug}`;
+    const previa = local.leer(clave);
+    if (previa) form.insertAdjacentHTML("afterbegin", `<p class="aviso">Ya mandaste tu respuesta el ${esc(previa.cuando)}. Si la mandás de nuevo, vale la última.</p>`);
+
+    form.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-paso]");
+      if (!b) return;
+      const c = b.closest("[data-contador]");
+      const o = c.querySelector("output");
+      const v = Math.min(+c.dataset.max, Math.max(+c.dataset.min, +o.textContent + +b.dataset.paso));
+      o.textContent = v;
+    });
+    form.addEventListener("change", () => {
+      $("#si-va").hidden = form.va.value !== "si";
+      const m = $("#menu-detalle");
+      if (m) m.hidden = form.menu?.value !== "si";
+    });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const error = $("#error");
+      const nombre = form.nombre.value.trim();
+      const va = form.va.value;
+      const falta = !nombre ? "Escribí tu nombre." : !va ? "Elegí si venís o no." : "";
+      if (falta) { error.textContent = falta; error.hidden = false; return; }
+      const num = (id) => +($(`#${id}`)?.textContent || 0);
+      const especial = va === "si" && form.menu?.value === "si";
+      const r = {
+        hoja: d.rsvp?.hoja, evento: config.slug, para: link.para || "", dispositivo: idDispositivo(),
+        nombre, va, personas: va === "si" ? num("personas") : 0,
+        sin_tacc: especial ? num("m0") : 0, vegetariano: especial ? num("m1") : 0, vegano: especial ? num("m2") : 0,
+        otra: especial ? (form.otra?.value || "").trim() : "",
+        cancion: va === "si" ? (form.cancion?.value || "").trim() : "", mensaje: (form.mensaje?.value || "").trim(),
+      };
+      const boton = form.querySelector("[type=submit]");
+      boton.disabled = true;
+      boton.textContent = "Enviando…";
+      error.hidden = true;
+      try {
+        await enviar(d, r);
+        local.guardar(clave, { cuando: fmt({ day: "numeric", month: "numeric" }).format(new Date()), va });
+        const titulo = va === "si" ? "¡Te esperamos!" : "¡Gracias por avisar!";
+        const texto = va === "si"
+          ? `Quedó confirmada tu asistencia${r.personas > 1 ? ` (${r.personas} personas)` : ""}.`
+          : "Te vamos a extrañar. Gracias por responder.";
+        const demo = d.rsvp?.demo ? `<p class="chico">Esto es una demo: en tu invitación, cada respuesta llega a tu planilla de confirmados.</p>` : "";
+        form.outerHTML = `<div class="tarjeta gracias"><h3>${titulo}</h3><p class="texto">${esc(texto)}</p>${demo}</div>`;
+      } catch (err) {
+        boton.disabled = false;
+        boton.textContent = "Reintentar";
+        const wa = d.confirmacion.whatsapp
+          ? ` <a href="https://wa.me/${esc(d.confirmacion.whatsapp.replace(/\D/g, ""))}?text=${encodeURIComponent(`Hola, soy ${nombre}: ${va === "si" ? `voy (${r.personas})` : "no puedo ir"}.`)}" target="_blank" rel="noopener">Avisar por WhatsApp</a>.`
+          : "";
+        error.innerHTML = `No se pudo enviar (¿sin conexión?). Probá de nuevo en un rato.${wa}`;
+        error.hidden = false;
+      }
+    });
+  }
+
+  // El script de Google responde con una redirección a googleusercontent.com, que sí manda
+  // Access-Control-Allow-Origin. Se manda como text/plain para que sea un pedido "simple" (sin
+  // pre-consulta CORS, que Apps Script no contesta).
+  async function enviar(d, r) {
+    if (d.rsvp?.demo) { await new Promise((ok) => setTimeout(ok, 700)); return; }
+    const resp = await fetch(d.rsvp.url, { method: "POST", body: JSON.stringify(r), headers: { "Content-Type": "text/plain;charset=utf-8" } });
+    const j = await resp.json();
+    if (!j.ok) throw new Error(j.error || "rechazada");
+  }
+
+  // ------------------------------------------------------------ imágenes y música (cifradas)
+  async function imagenes(key) {
+    const urls = new Map();
+    // La de portada primero: es la que se ve al abrir.
+    const tags = $$("img[data-f]").sort((a, b) => (b.closest(".portada") ? 1 : 0) - (a.closest(".portada") ? 1 : 0));
+    for (const img of tags) {
+      const ruta = img.dataset.f;
+      if (!urls.has(ruta)) {
+        urls.set(ruta, bajarYDescifrar(key, ruta).then((buf) => URL.createObjectURL(new Blob([buf], { type: "image/webp" }))));
+      }
+      urls.get(ruta).then((u) => { img.src = u; }).catch(() => {});
+    }
+    return urls;
+  }
+
+  function musica(audio) {
+    const b = document.createElement("button");
+    b.className = "musica";
+    b.type = "button";
+    const icono = (play) => play
+      ? `<svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>`
+      : `<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>`;
+    const pintar = () => { b.innerHTML = icono(audio.paused); b.setAttribute("aria-label", audio.paused ? "Poner música" : "Pausar música"); };
+    b.onclick = () => { audio.paused ? audio.play() : audio.pause(); };
+    audio.onplay = audio.onpause = pintar;
+    pintar();
+    document.body.append(b);
+  }
+
+  // ------------------------------------------------------------ arranque
+  async function iniciar() {
+    document.documentElement.classList.add("js");
+    const link = leerLink();
+    const abrir = $(".tapa [data-abrir]");
+    const fallar = (msg) => {
+      $(".tapa-centro").insertAdjacentHTML("beforeend", `<p class="tapa-error">${msg}</p>`);
+      $$(".tapa [data-abrir]").forEach((b) => b.remove());
+    };
+    if (!crypto?.subtle) return fallar("Tu navegador es muy viejo para abrir la invitación. Probá con Chrome o Safari actualizados.");
+    if (!link.k) return fallar("Al link le falta una parte. Abrí la invitación desde el mensaje completo que te mandaron.");
+
+    let d, key;
+    try {
+      key = await clave(link.k);
+      d = JSON.parse(new TextDecoder().decode(await bajarYDescifrar(key, "d.bin")));
+    } catch (err) {
+      return fallar("No pudimos abrir la invitación: el link parece incompleto. Copialo entero desde el mensaje y probá de nuevo.");
+    }
+
+    $("main").innerHTML = portadaHTML(d) + cuentaHTML(d) + lugaresHTML(d) + cronogramaHTML(d) + dressHTML(d) +
+      galeriaHTML(d) + regalosHTML(d) + confirmacionHTML(d, link) + pieHTML(d);
+    const fotos = imagenes(key);
+
+    // La música se descifra antes de tocar "Abrir": play() solo funciona dentro del toque del usuario.
+    let audio = null;
+    if (d.musica) {
+      bajarYDescifrar(key, d.musica.f).then((buf) => {
+        audio = new Audio(URL.createObjectURL(new Blob([buf], { type: "audio/mpeg" })));
+        audio.loop = true;
+        musica(audio);
+      }).catch(() => {});
+    }
+
+    const abrirTapa = () => {
+      tapa.classList.add("abierta");
+      document.body.style.overflow = "";
+      audio?.play().catch(() => {});
+      setTimeout(() => tapa.remove(), 1000);
+    };
+    $$(".tapa [data-abrir]").forEach((b) => { b.disabled = false; b.onclick = abrirTapa; });
+    if (new URLSearchParams(location.search).has("abierta")) abrirTapa();   // capturas y vista previa
+
+    cuentaRegresiva(d);
+    armarConfirmacion(d, link);
+    document.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-agendar],[data-copiar],[data-datos],[data-ver]");
+      if (!t) return;
+      if (t.dataset.agendar !== undefined) agendar(d);
+      else if (t.dataset.copiar !== undefined) copiar(t.dataset.copiar, t);
+      else if (t.dataset.datos !== undefined) { $(".datos").classList.toggle("abiertos"); t.textContent = $(".datos.abiertos") ? "Ocultar datos" : "Ver datos"; }
+      else if (t.dataset.ver !== undefined) {
+        fotos.then(async (m) => visor(await Promise.all(d.galeria.map((g) => m.get(g.f))), +t.dataset.ver));
+      }
+    });
+
+    // Aparición de secciones al llegar con el scroll.
+    const io = "IntersectionObserver" in window ? new IntersectionObserver((es) => {
+      for (const e of es) if (e.isIntersecting) { e.target.classList.add("visible"); io.unobserve(e.target); }
+    }, { rootMargin: "0px 0px -8% 0px" }) : null;
+    $$(".aparece").forEach((s) => (io ? io.observe(s) : s.classList.add("visible")));
+    document.documentElement.dataset.lista = "1";   // señal para las capturas automáticas
+  }
+
+  // Si en la misma pestaña se abre otro link de la invitación (el general y después el personal), el
+  // navegador solo cambia el "#" y no recarga: la página seguiría con la clave y el nombre viejos.
+  addEventListener("hashchange", () => location.reload());
+  document.body.style.overflow = "hidden";
+  iniciar();
+})();
+</script>
+</body>
+</html>
