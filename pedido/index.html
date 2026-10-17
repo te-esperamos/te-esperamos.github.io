@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-1koJUNESLVhQpM3oV6+8oGbitFnP2FWSnqLSqoUgWEg='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WFT/HbnjdFPoplJkaxCqyZmKbFGxp8q7bBqdHrChvSY='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
 <title>Tu invitación · Te esperamos</title>
@@ -38,6 +38,8 @@ input:focus, textarea:focus { outline: 2px solid color-mix(in srgb, var(--accent
 textarea { min-height: 76px; resize: vertical; }
 .fila { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.opciones.tres { grid-template-columns: repeat(3, 1fr); }
+.opciones.tres label { padding: 12px 6px; font-size: 14px; }
 .opciones input { position: absolute; opacity: 0; }
 .opciones label { margin: 0; padding: 14px 10px; text-align: center; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; font-size: 15px; }
 .opciones input:checked + label { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, #fff); font-weight: 500; }
@@ -75,25 +77,35 @@ textarea { min-height: 76px; resize: vertical; }
   <form id="pedido" novalidate>
     <fieldset>
       <legend><b>1</b>Tu compra</legend>
+      <div class="campo"><span class="etiqueta">¿Qué compraste?</span>
+        <div class="opciones tres">
+          <input type="radio" name="producto" id="prod-web" value="web" checked><label for="prod-web">Invitación web</label>
+          <input type="radio" name="producto" id="prod-video" value="video"><label for="prod-video">Video invitación</label>
+          <input type="radio" name="producto" id="prod-ambos" value="ambos"><label for="prod-ambos">Las dos</label>
+        </div></div>
       <div class="campo"><label for="compra">Número de compra de Mercado Libre</label>
         <input type="text" id="compra" inputmode="numeric" autocomplete="off" required>
         <span class="ayuda">Está en Mis compras → el detalle de esta compra (ej.: 2000012345678).</span></div>
-      <div class="campo"><label for="mail">Tu Gmail (para compartirte la planilla de confirmados)</label>
+      <div class="campo" data-web><label for="mail">Tu Gmail (para compartirte la planilla de confirmados)</label>
         <input type="email" id="mail" autocomplete="email" required></div>
     </fieldset>
 
     <fieldset>
       <legend><b>2</b>El evento</legend>
       <div class="campo"><span class="etiqueta">¿Qué celebran?</span>
-        <div class="opciones">
+        <div class="opciones tres">
           <input type="radio" name="tipo" id="tipo-quince" value="quince"><label for="tipo-quince">15 años</label>
           <input type="radio" name="tipo" id="tipo-boda" value="boda"><label for="tipo-boda">Casamiento</label>
+          <input type="radio" name="tipo" id="tipo-cumple" value="cumple"><label for="tipo-cumple">Cumpleaños</label>
         </div></div>
       <div class="campo" id="campo-estilo" hidden><span class="etiqueta">Elegí el estilo</span>
         <div class="estilos" id="estilos"></div></div>
       <div class="campo"><label for="nombres" id="et-nombres">Nombre(s) para la tapa</label>
         <input type="text" id="nombres" maxlength="60" required>
         <span class="ayuda" id="ay-nombres">Solo nombres, sin apellido: la tapa la ve cualquiera que tenga el link.</span></div>
+      <div class="campo" id="campo-edad" hidden><label for="edad">¿Cuántos cumple?</label>
+        <input type="number" id="edad" min="1" max="120" inputmode="numeric" placeholder="6">
+        <span class="ayuda">Va en el sello del sobre ("Cumplo 6"). Si preferís que no diga la edad, dejalo vacío.</span></div>
       <div class="campo"><label for="frase">Una frase (opcional)</label>
         <textarea id="frase" maxlength="400" placeholder="Si la dejás vacía, te proponemos una."></textarea></div>
       <div class="fila">
@@ -112,7 +124,7 @@ textarea { min-height: 76px; resize: vertical; }
       <button type="button" class="agregar" data-agregar="lugar">+ Agregar otro lugar</button>
     </fieldset>
 
-    <fieldset>
+    <fieldset data-web>
       <legend><b>4</b>Más detalles <small style="font-size:14px;color:var(--muted)">(opcional)</small></legend>
       <span class="etiqueta">Cronograma de la noche</span>
       <div id="cronograma"></div>
@@ -125,7 +137,7 @@ textarea { min-height: 76px; resize: vertical; }
         <input type="text" id="dress-detalle" maxlength="300" placeholder="Ej.: el blanco es solo para la novia"></div>
     </fieldset>
 
-    <fieldset>
+    <fieldset data-web>
       <legend><b>5</b>Regalos <small style="font-size:14px;color:var(--muted)">(opcional)</small></legend>
       <label class="cheq"><input type="checkbox" id="con-regalos"> Quiero mostrar datos para regalos</label>
       <div id="regalos" hidden>
@@ -146,19 +158,22 @@ textarea { min-height: 76px; resize: vertical; }
       <legend><b>6</b>Confirmación de asistencia</legend>
       <div class="fila">
         <div class="campo"><label for="hasta">Confirmar hasta</label><input type="date" id="hasta"></div>
-        <div class="campo"><label for="max">Máx. por invitación</label><input type="number" id="max" min="1" max="30" placeholder="10"></div>
+        <div class="campo" data-web><label for="max">Máx. por invitación</label><input type="number" id="max" min="1" max="30" placeholder="10"></div>
       </div>
+      <div data-web>
       <label class="cheq"><input type="checkbox" id="menu" checked> Preguntar si alguien necesita menú especial (sin TACC, vegetariano, vegano)</label>
       <label class="cheq"><input type="checkbox" id="cancion" checked> Pedir una canción que no puede faltar</label>
       <label class="cheq"><input type="checkbox" id="mensaje" checked> Dejar que escriban un mensaje</label>
       <div class="campo"><label for="whatsapp">Un celular para consultas (opcional)</label>
         <input type="tel" id="whatsapp" autocomplete="tel" placeholder="381 555 0000">
         <span class="ayuda">Aparece solo si a un invitado no le funciona el formulario, para que avise por WhatsApp.</span></div>
+      </div>
+      <p class="ayuda" data-video hidden>El video termina con "Confirmá tu asistencia antes del…": si no ponés fecha, no lo dice.</p>
     </fieldset>
 
     <fieldset>
       <legend><b>7</b>Fotos y comentarios</legend>
-      <p class="nota">Las fotos mandalas por la <b>mensajería de Mercado Libre</b>, en esta misma compra: una para la portada (vertical queda mejor) y hasta 12 para la galería. Si no mandás fotos, la invitación va sin galería y queda igual de linda.</p>
+      <p class="nota" id="nota-fotos">Las fotos mandalas por la <b>mensajería de Mercado Libre</b>, en esta misma compra: una para la portada (vertical queda mejor) y hasta 12 para la galería. Si no mandás fotos, la invitación va sin galería y queda igual de linda.</p>
       <div class="campo"><label for="comentarios">¿Algo más que tengamos que saber?</label>
         <textarea id="comentarios" maxlength="1000"></textarea></div>
     </fieldset>
@@ -169,7 +184,7 @@ textarea { min-height: 76px; resize: vertical; }
 
   <div class="listo" id="listo" hidden>
     <h2>¡Listo, recibimos tus datos!</h2>
-    <p>Ahora mandanos las fotos por la mensajería de Mercado Libre. Tu invitación y tu planilla te llegan por ahí mismo.</p>
+    <p>Ahora mandanos las fotos por la mensajería de Mercado Libre. Lo que compraste te llega por ahí mismo.</p>
     <p class="ayuda">Si te olvidaste de algo, volvé a completar el formulario con el mismo número de compra: vale el último.</p>
   </div>
 </main>
@@ -196,7 +211,7 @@ textarea { min-height: 76px; resize: vertical; }
 </template>
 <datalist id="tipos-lugar"><option value="Fiesta"><option value="Ceremonia"><option value="Civil"><option value="Misa"><option value="Recepción"></datalist>
 
-<script type="application/json" id="config">{"web_app":"https://script.google.com/macros/s/AKfycbyHjwKANgOkhw6V6wEG3c21v8Y13zhR5U3ghFMXFbNPuVPwa6YJJlhJh4a6vhdD2p8PbA/exec","hoja":"1eHrSsBsDbPeToa1Tcw14MKwMQpHI5yYJM6xxuh0J85Q","estilos":[{"id":"gala","tipo":"quince","nombre":"Noche"},{"id":"rosa","tipo":"quince","nombre":"Rosa"},{"id":"lila","tipo":"quince","nombre":"Lila"},{"id":"jardin","tipo":"boda","nombre":"Jardín"},{"id":"clasica","tipo":"boda","nombre":"Clásica"}]}</script>
+<script type="application/json" id="config">{"web_app":"https://script.google.com/macros/s/AKfycbyHjwKANgOkhw6V6wEG3c21v8Y13zhR5U3ghFMXFbNPuVPwa6YJJlhJh4a6vhdD2p8PbA/exec","hoja":"1eHrSsBsDbPeToa1Tcw14MKwMQpHI5yYJM6xxuh0J85Q","estilos":[{"id":"gala","tipo":"quince","nombre":"Noche"},{"id":"rosa","tipo":"quince","nombre":"Rosa"},{"id":"lila","tipo":"quince","nombre":"Lila"},{"id":"jardin","tipo":"boda","nombre":"Jardín"},{"id":"clasica","tipo":"boda","nombre":"Clásica"},{"id":"confeti","tipo":"cumple","nombre":"Confeti"},{"id":"dorado","tipo":"cumple","nombre":"Dorado"}]}</script>
 <script>// Formulario de pedido: arma los datos con las MISMAS claves que evento.yaml (pedidos.py los copia
 // casi tal cual) y los manda al script de Google. Valida antes de mandar lo que generar.mjs rechazaría
 // (fechas, horas, CBU de 22 números), así el pedido no vuelve con errores días después.
@@ -216,9 +231,23 @@ textarea { min-height: 76px; resize: vertical; }
       `<input type="radio" name="estilo" id="est-${e.id}" value="${e.id}"${e.id === elegido ? " checked" : ""}>` +
       `<label for="est-${e.id}"><img src="estilos/${e.id}.jpg" alt="" loading="lazy"><span>${e.nombre}</span></label>`).join("");
     $("#campo-estilo").hidden = false;
-    const boda = tipo === "boda";
-    $("#et-nombres").textContent = boda ? "Nombres de los novios" : "Nombre de la quinceañera";
-    $("#nombres").placeholder = boda ? "Lucía & Martín" : "Sofía";
+    $("#et-nombres").textContent = { boda: "Nombres de los novios", quince: "Nombre de la quinceañera", cumple: "Nombre de quien cumple" }[tipo];
+    $("#nombres").placeholder = { boda: "Lucía & Martín", quince: "Sofía", cumple: "Benjamín" }[tipo];
+    $("#campo-edad").hidden = tipo !== "cumple";
+  }
+
+  // ------------------------------------------------------------ producto (web, video o las dos)
+  // El video solo usa el evento, la fecha, el lugar y la foto: con "solo video" se esconde lo demás
+  // (regalos, cronograma, opciones de confirmación) para no pedir datos que no se usan. El Gmail solo
+  // hace falta para compartir la planilla de confirmados, que viene con la web.
+  const producto = () => form.producto.value;
+  function pintarProducto() {
+    const soloVideo = producto() === "video";
+    $$("[data-web]").forEach((x) => { x.hidden = soloVideo; });
+    $$("[data-video]").forEach((x) => { x.hidden = !soloVideo; });
+    $("#nota-fotos").innerHTML = soloVideo
+      ? "Mandá <b>una foto</b> por la <b>mensajería de Mercado Libre</b>, en esta misma compra (vertical queda mejor). Sin foto, el video va igual, con el diseño."
+      : "Las fotos mandalas por la <b>mensajería de Mercado Libre</b>, en esta misma compra: una para la portada (vertical queda mejor) y hasta 12 para la galería. Si no mandás fotos, la invitación va sin galería y queda igual de linda.";
   }
 
   // ------------------------------------------------------------ bloques repetibles
@@ -246,7 +275,8 @@ textarea { min-height: 76px; resize: vertical; }
       fin = `${d.toISOString().slice(0, 10)} ${v("fin")}`;
     }
     const d = {
-      tipo, estilo: form.estilo?.value || "", nombres: v("nombres"), frase: v("frase"),
+      producto: producto(), tipo, estilo: form.estilo?.value || "", nombres: v("nombres"),
+      edad: tipo === "cumple" && v("edad") ? Number(v("edad")) : null, frase: v("frase"),
       fecha: fecha && hora ? `${fecha} ${hora}` : "", fin, ciudad: v("ciudad"),
       lugares: bloques("#lugares").filter((l) => l.nombre || l.direccion),
       cronograma: bloques("#cronograma").filter((c) => c.hora && c.que),
@@ -268,8 +298,9 @@ textarea { min-height: 76px; resize: vertical; }
     const marcar = (id, msg) => { $(`#${id}`)?.classList.add("mal"); e.push(msg); };
     $$(".mal").forEach((x) => x.classList.remove("mal"));
     if (v("compra").replace(/\D/g, "").length < 6) marcar("compra", "El número de compra (está en Mis compras).");
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v("mail"))) marcar("mail", "Un mail válido para compartirte la planilla.");
-    if (!d.tipo) e.push("Si son 15 años o casamiento.");
+    if (producto() !== "video" && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v("mail"))) marcar("mail", "Un mail válido para compartirte la planilla.");
+    if (v("edad") && !(Number(v("edad")) >= 1 && Number(v("edad")) <= 120)) marcar("edad", "La edad, en número (o dejala vacía).");
+    if (!d.tipo) e.push("Qué celebran: 15 años, casamiento o cumpleaños.");
     if (d.tipo && !d.estilo) e.push("El estilo de la invitación.");
     if (!d.nombres) marcar("nombres", "Los nombres para la tapa.");
     if (!d.fecha) { if (!v("fecha")) marcar("fecha", "La fecha."); if (!v("hora")) marcar("hora", "La hora en que empieza."); }
@@ -286,13 +317,18 @@ textarea { min-height: 76px; resize: vertical; }
   function guardar() {
     try {
       const campos = Object.fromEntries($$("input[id],textarea[id]", form).map((i) => [i.id, i.type === "checkbox" ? i.checked : i.value]));
-      localStorage.setItem(BORRADOR, JSON.stringify({ campos, tipo: form.tipo.value, estilo: form.estilo?.value, lugares: bloques("#lugares"), cronograma: bloques("#cronograma") }));
+      localStorage.setItem(BORRADOR, JSON.stringify({ campos, producto: producto(), tipo: form.tipo.value, estilo: form.estilo?.value, lugares: bloques("#lugares"), cronograma: bloques("#cronograma") }));
     } catch { /* sin memoria del navegador: no pasa nada */ }
   }
   function recuperar() {
     let b = null;
     try { b = JSON.parse(localStorage.getItem(BORRADOR) || "null"); } catch { /* idem */ }
     if (b?.tipo) { $(`#tipo-${b.tipo}`).checked = true; pintarEstilos(b.tipo, b.estilo); }
+    // El PDF de cada publicación abre el formulario con ?producto=video (o web): manda sobre el borrador,
+    // porque quien compró el video no tiene que adivinar qué opción marcar.
+    const pedido = new URLSearchParams(location.search).get("producto") || b?.producto;
+    if (["web", "video", "ambos"].includes(pedido)) $(`#prod-${pedido}`).checked = true;
+    pintarProducto();
     for (const [id, val] of Object.entries(b?.campos || {})) {
       const i = document.getElementById(id);
       if (i) i.type === "checkbox" ? (i.checked = val) : (i.value = val);
@@ -314,6 +350,7 @@ textarea { min-height: 76px; resize: vertical; }
       }
     }
     if (e.target.id === "con-regalos") $("#regalos").hidden = !e.target.checked;
+    if (e.target.name === "producto") pintarProducto();
     guardar();
   });
   form.addEventListener("input", guardar);
@@ -337,7 +374,8 @@ textarea { min-height: 76px; resize: vertical; }
     try {
       const r = await fetch(cfg.web_app, {
         method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ accion: "pedido", hoja: cfg.hoja, compra: v("compra").replace(/\D/g, ""), tipo: d.tipo, estilo: d.estilo, nombres: d.nombres, mail: v("mail"), datos: d }),
+        // Sin Gmail (solo video): el script de Google exige un mail; va uno que dice que no hay.
+        body: JSON.stringify({ accion: "pedido", hoja: cfg.hoja, compra: v("compra").replace(/\D/g, ""), tipo: d.tipo, estilo: d.estilo, nombres: d.nombres, mail: v("mail") || "sin-mail@video.invalid", datos: d }),
       });
       const j = await r.json();
       if (!j.ok) throw new Error(j.error);
